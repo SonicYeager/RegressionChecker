@@ -3,7 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegressionChecker", "RegressionChecker.csproj", "{F8ECED2E-9BB3-4F4A-9344-913CE3E77555}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegressionChecker", "RegressionChecker.csproj", "{F8ECED2E-9BB3-4F4A-9344-913CE3E77555}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "..\UnitTests\UnitTests.csproj", "{01AF6FE8-2E8A-4FD7-A0AF-2FFC6395F68C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegressionCheckerLogic", "..\RegressionCheckerLogic\RegressionCheckerLogic.csproj", "{7F45FF76-F526-4376-859B-80E072ECE361}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tracelogparserlogic", "..\TraceLogParserLogic\tracelogparserlogic.csproj", "{7FD08B83-5983-45C8-82A5-99AD6FBB623A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tracelogparser", "..\tracelogparser\tracelogparser.csproj", "{B9EA6B05-E21E-44ED-B683-733C22784CC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "regressionevallogic", "..\regressionevallogic\regressionevallogic.csproj", "{199328DC-F1F0-48BD-91A8-FF9A5125DF2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "regressioneval", "..\regressioneval\regressioneval.csproj", "{48C2276C-2FDE-4329-918E-E0DA39B44574}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +27,30 @@ Global
 		{F8ECED2E-9BB3-4F4A-9344-913CE3E77555}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8ECED2E-9BB3-4F4A-9344-913CE3E77555}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8ECED2E-9BB3-4F4A-9344-913CE3E77555}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01AF6FE8-2E8A-4FD7-A0AF-2FFC6395F68C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01AF6FE8-2E8A-4FD7-A0AF-2FFC6395F68C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01AF6FE8-2E8A-4FD7-A0AF-2FFC6395F68C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01AF6FE8-2E8A-4FD7-A0AF-2FFC6395F68C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F45FF76-F526-4376-859B-80E072ECE361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F45FF76-F526-4376-859B-80E072ECE361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F45FF76-F526-4376-859B-80E072ECE361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F45FF76-F526-4376-859B-80E072ECE361}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FD08B83-5983-45C8-82A5-99AD6FBB623A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FD08B83-5983-45C8-82A5-99AD6FBB623A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FD08B83-5983-45C8-82A5-99AD6FBB623A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FD08B83-5983-45C8-82A5-99AD6FBB623A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9EA6B05-E21E-44ED-B683-733C22784CC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9EA6B05-E21E-44ED-B683-733C22784CC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9EA6B05-E21E-44ED-B683-733C22784CC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9EA6B05-E21E-44ED-B683-733C22784CC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{199328DC-F1F0-48BD-91A8-FF9A5125DF2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{199328DC-F1F0-48BD-91A8-FF9A5125DF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{199328DC-F1F0-48BD-91A8-FF9A5125DF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{199328DC-F1F0-48BD-91A8-FF9A5125DF2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48C2276C-2FDE-4329-918E-E0DA39B44574}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48C2276C-2FDE-4329-918E-E0DA39B44574}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48C2276C-2FDE-4329-918E-E0DA39B44574}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48C2276C-2FDE-4329-918E-E0DA39B44574}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
