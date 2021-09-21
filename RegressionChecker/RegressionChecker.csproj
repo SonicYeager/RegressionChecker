@@ -5,11 +5,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.3" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.3" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.3" />
+    <PackageReference Include="Avalonia" Version="0.10.999-cibuild0014036-beta" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.999-cibuild0014036-beta" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.999-cibuild0014036-beta" />
    </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RegressionCheckerLogic\RegressionCheckerLogic.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="MainUI.axaml.cs">
+      <DependentUpon>MainUI.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
