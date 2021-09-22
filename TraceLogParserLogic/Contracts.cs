@@ -8,7 +8,7 @@ namespace tracelogparserlogic
 
     public interface ICommandParser
     {
-        public ParseCommandData ParseCLIArgs(string args); //throw??
+        public ParseCommandData ParseCLIArgs(List<string> args); //throw??
 
         public event OnOutput onOutput; //handle errors?
     }
