@@ -15,7 +15,7 @@ namespace tracelogparserlogic
 
     public interface ITraceLogParser
     {
-        public CSVFile ParseTraceLog(TraceLogFile traceLogFile);
+        public CSVFile ParseTraceLog(TraceLogFile traceLogFile, string dstPath);
     }
 
     public interface ICSVFileWriter

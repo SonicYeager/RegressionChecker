@@ -14,9 +14,9 @@ namespace UnitTests
             TraceLogFile file = new TraceLogFile() { Lines = new List<string>(){ "2021/06/22 23:28:19 [INFO]    [VideoEngine]: 00:00:00 1.0678" }, FilePath="" };
             CSVFile expected = new CSVFile() { Seperator = ";", FilePath="", Headers = new List<string>(){ "Frame", "Duration" }, Elements = new List<List<string>>() { new List<string>() { "00:00:00", "1.0678" } } };
 
-            var result = parser.ParseTraceLog(file);
+            var result = parser.ParseTraceLog(file, "");
 
-            Assert.Equal(result, expected);
+            Assert.True(result.Equals(expected));
         }
 
         //multiline

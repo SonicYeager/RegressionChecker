@@ -17,9 +17,8 @@ namespace tracelogparserlogic
     //parse framecount (?<Minute>\d\d):(?<Second>\d\d):(?<Frames>\d\d)
     public class TraceLogParser : ITraceLogParser
     {
-        public CSVFile ParseTraceLog(TraceLogFile traceLogFile)
+        public CSVFile ParseTraceLog(TraceLogFile traceLogFile, string dstPath)
         {
-            string fPath = Path.GetFullPath(traceLogFile.FilePath);
             List<List<string>> parsedElements = new();
                  
             foreach (string line in traceLogFile.Lines)
@@ -31,7 +30,7 @@ namespace tracelogparserlogic
                 if (match.Success)
                 {
                     string datablock = match.Value;
-                    regex = new("(?<Frame>\\d\\d:\\d\\d:\\d\\d)|(?<Duration>(\\d+.\\d+$))");
+                    regex = new("(?<Frame>\\d\\d:\\d\\d:\\d\\d)");
                     match = regex.Match(datablock);
                     if (match.Success)
                     {
@@ -39,14 +38,21 @@ namespace tracelogparserlogic
                         Group group;
                         groups.TryGetValue("Frame", out group);
                         results.Add(group.Value);
+                    }
+                    regex = new("(?<Duration>(\\d+.\\d+$))");
+                    match = regex.Match(datablock);
+                    if (match.Success)
+                    {
+                        var groups = match.Groups;
+                        Group group;
                         groups.TryGetValue("Duration", out group);
                         results.Add(group.Value);
-                        parsedElements.Add(results);
                     }
+                    parsedElements.Add(results);
                 }
             }
 
-            return new CSVFile() { Seperator=";", FilePath="", Headers=new List<string>() { "Frame", "Duration" }, Elements= new List<List<string>>() { new List<string>() { } } };
+            return new CSVFile() { Seperator=";", FilePath="", Headers=new List<string>() { "Frame", "Duration" }, Elements= parsedElements };
         }
     }
 }
