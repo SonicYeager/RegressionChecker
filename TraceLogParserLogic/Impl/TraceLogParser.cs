@@ -52,7 +52,7 @@ namespace tracelogparserlogic
                 }
             }
 
-            return new CSVFile() { Seperator=";", FilePath="", Headers=new List<string>() { "Frame", "Duration" }, Elements= parsedElements };
+            return new CSVFile() { Seperator=';', FilePath="", Headers=new List<string>() { "Frame", "Duration" }, Elements= parsedElements };
         }
     }
 }
