@@ -8,18 +8,24 @@ using System.IO;
 
 namespace tracelogparserlogic
 {
-    //FrameFilter (?<Frame>\d\d:\d\d:\d\d)
-    //[INFO]\t[VideoEngine]Filter (?<IsDataLine>([[]{1}INFO[]]{1}\s+[[]{1}VideoEngine[]]{1}))
-    //DurationFilter (?<Duration>(\d+.\d+$))
+    //FrameFilter                                  (?<Frame>\d\d:\d\d:\d\d)
+    //[INFO]\t[VideoEngine]Filter                  (?<IsDataLine>([[]{1}INFO[]]{1}\s+[[]{1}VideoEngine[]]{1}))
+    //[INFO]\t[PerformanceMeasurement]Filter
+    //DurationFilter                               (?<Duration>(\d+.\d+$))
 
-    //fetch data block (?<IsDataLine>([[]{1}INFO[]]{1}\s+[[]{1}VideoEngine[]]{1})?(\d\d:\d\d:\d\d)\s(\d+.\d+$))
-    //sperate data block (?<Frame>\d\d:\d\d:\d\d)|(?<Duration>(\d+.\d+$))
-    //parse framecount (?<Minute>\d\d):(?<Second>\d\d):(?<Frames>\d\d)
+    //fetch data block                             (?<IsDataLine>([[]{1}INFO[]]{1}\s+[[]{1}VideoEngine[]]{1})?(\d\d:\d\d:\d\d)\s(\d+.\d+$))
+    //sperate data block                           (?<Frame>\d\d:\d\d:\d\d)|(?<Duration>(\d+.\d+$))
+    //parse framecount                             (?<Minute>\d\d):(?<Second>\d\d):(?<Frames>\d\d)
     public class TraceLogParser : ITraceLogParser
     {
         public CSVFile ParseTraceLog(TraceLogFile traceLogFile, string dstPath)
         {
             List<List<string>> parsedElements = new();
+
+            //if (!Path.EndsInDirectorySeparator(Path.GetFullPath(dstPath))) //temp
+            //    throw new IOException("Destination Path is not a Directory");
+
+            var newPath = Path.GetFullPath(dstPath) + Path.GetFileNameWithoutExtension(Path.GetFullPath(traceLogFile.FilePath)) + ".csv";
                  
             foreach (string line in traceLogFile.Lines)
             {
@@ -52,7 +58,7 @@ namespace tracelogparserlogic
                 }
             }
 
-            return new CSVFile() { Seperator=';', FilePath="", Headers=new List<string>() { "Frame", "Duration" }, Elements= parsedElements };
+            return new CSVFile() { Seperator=';', FilePath=newPath, Headers=new List<string>() { "Frame", "Duration" }, Elements=parsedElements };
         }
     }
 }
