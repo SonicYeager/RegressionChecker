@@ -8,7 +8,7 @@ namespace regressionevallogic
     {
         public List<string> Headers { get; set; }
         public List<List<string>> Elements { get; set; }
-        public string Seperator { get; set; }
+        public char Seperator { get; set; }
         public string FilePath { get; set; }
 
         public bool Equals(CSVFile other)
@@ -27,15 +27,24 @@ namespace regressionevallogic
         }
     }
 
+    public enum DATATIMETYPE
+    {
+        FRAMETIME = 0,
+        RUNTIME = 1
+    }
+
     public struct ParseCommandData : IEquatable<ParseCommandData>
     {
         public string DestinationPath { get; set; }
         public List<string> SourceFilePaths { get; set; }
 
+        public DATATIMETYPE DataTimeType { get; set; }
+
         public bool Equals(ParseCommandData other)
         {
             return DestinationPath == other.DestinationPath &&
-                   SourceFilePaths.SequenceEqual(other.SourceFilePaths);
+                   SourceFilePaths.SequenceEqual(other.SourceFilePaths) &&
+                   DataTimeType == other.DataTimeType;
         }
     }
 }

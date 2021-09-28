@@ -8,14 +8,14 @@ namespace regressionevallogic
 
     public interface ICommandParser
     {
-        public ParseCommandData ParseCLIArgs(string args); //throw??
+        public ParseCommandData ParseCLIArgs(List<string> args); //throw??
 
         public event OnOutput onOutput; //handle errors?
     }
 
     public interface IRegressionEvaluator
     {
-        public void ParseTraceLog(CSVFile file);
+        public void EvaluateRegression(CSVFile file);
 
         public event OnRegressionEvaluation onRegressionEvaluation;
     }
