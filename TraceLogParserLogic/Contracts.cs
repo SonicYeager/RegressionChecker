@@ -5,6 +5,7 @@ namespace tracelogparserlogic
 {
 
     public delegate void OnOutput(string msg);
+    public delegate void OnParsed(CSVFile file);
 
     public interface ICommandParser
     {
@@ -15,7 +16,9 @@ namespace tracelogparserlogic
 
     public interface ITraceLogParser
     {
-        public CSVFile ParseTraceLog(TraceLogFile traceLogFile, string dstPath);
+        event OnParsed onParsed;
+
+        public void ParseTraceLog(TraceLogFile traceLogFile, string dstPath);
     }
 
     public interface ICSVFileWriter

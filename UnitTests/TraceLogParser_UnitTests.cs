@@ -8,69 +8,213 @@ namespace UnitTests
     public class TraceLogParser_UnitTests
     {
         [Fact]
-        public void ParseTraceLog_GivenOneLineTraceLog_ReturnCSVFileWithOneEntry()
+        public void ParseTraceLog_FullTraceLogOneFrame_ReturnCSVFilesWithOneEntry()
         {
             TraceLogParser parser = new();
-            TraceLogFile file = new TraceLogFile() { Lines = new List<string>(){ "2021/06/22 23:28:19 [INFO]    [VideoEngine]: 00:00:00 1.0678" }, FilePath= "C:\\msvc\\TestLog001.txt" };
-            CSVFile expected = new CSVFile() { Seperator = ';', FilePath="D:\\Temp\\TestLog001.csv", Headers = new List<string>(){ "Frame", "Duration" }, Elements = new List<List<string>>() { new List<string>() { "00:00:00", "1.0678" } } };
-
-            var result = parser.ParseTraceLog(file, "D:\\Temp\\");
-
-            Assert.True(result.Equals(expected));
-        }
-
-        [Fact]
-        public void ParseTraceLog_GivenMultipleLineTraceLog_ReturnCSVFileWithMultipleEntries()
-        {
-            TraceLogParser parser = new();
-            TraceLogFile file = new TraceLogFile() { Lines = new List<string>() { 
-                "2021/06/22 23:28:19 [INFO]    [VideoEngine]: 00:00:00 1.0678",
-                "2021/06/22 23:28:19 [INFO]    [VideoEngine]: 00:00:01 205.145" }, FilePath = "C:\\msvc\\TestLog001.txt"};
-            CSVFile expected = new CSVFile() { Seperator = ';', FilePath = "D:\\Temp\\TestLog001.csv", Headers = new List<string>() { "Frame", "Duration" }, Elements = new List<List<string>>() { 
-                new List<string>() { "00:00:00", "1.0678" },
-                new List<string>() { "00:00:01", "205.145" }} };
-
-            var result = parser.ParseTraceLog(file, "D:\\Temp\\");
-
-            Assert.True(result.Equals(expected));
-        }
-
-        [Fact]
-        public void ParseTraceLog_GivenMultipleLineWithOneFalseTraceLog_ReturnCSVFileWithMultipleEntries()
-        {
-            TraceLogParser parser = new();
-            TraceLogFile file = new TraceLogFile()
+            int _callCount = 0;
+            CSVFile actualFrameTime = new();
+            CSVFile actualRunTime = new();
+            parser.onParsed += (CSVFile file) => { if (_callCount == 0) actualFrameTime = file; else actualRunTime = file; };
+            TraceLogFile file = new () 
+            { 
+                Lines = new ()
+                {
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start RenderFrame [1] | Frame: 00:00:00",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start GetVideoFrameFromVIP [61]",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop GetVideoFrameFromVIP [61]-> needs 0.6304 ms",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start PaintVideo [61]",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop PaintVideo [61]-> needs 0.6196 ms",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop RenderFrame [1]-> needs 1.3965 ms | Frame: 00:00:00",
+                },
+                FilePath= "C:\\msvc\\TestLog001.txt" 
+            };
+            CSVFile expectedFrameTime = new () 
             {
-                Lines = new List<string>() {
-                "2021/06/22 23:28:19 [INFO]    [VideoEngine]: 00:00:00 1.0678",
-                "2021/06/22 23:27:58 [INFO]    [UserAction]: Start MAGIX Video Pro X(17.0.0.0)",
-                "2021/06/22 23:28:19 [INFO]    [VideoEngine]: 00:00:01 205.145" },
+                Seperator = GlobalConstants.CSVFileSpererator,
+                FilePath="D:\\Temp\\TestLog001_FT.csv", 
+                Headers = new List<string>()
+                {
+                    GlobalConstants.FrameHeaderText, 
+                    GlobalConstants.DurationHeaderText, 
+                }, 
+                Elements = new List<List<string>>()
+                {
+                    new List<string>() { "00:00:00", "1.3965" },
+                } 
+            };
+            CSVFile expectedRunTime = new ()
+            {
+                Seperator = GlobalConstants.CSVFileSpererator,
+                FilePath = "D:\\Temp\\TestLog001_RT.csv",
+                Headers = new List<string>() 
+                {
+                    GlobalConstants.FrameHeaderText,
+                    GlobalConstants.MethodNameHeaderText,
+                    GlobalConstants.RunTimeHeaderText, 
+                },
+                Elements = new List<List<string>>()
+                { 
+                    new List<string>() { "00:00:00", "GetVideoFrameFromVIP", "0.6304" }, 
+                    new List<string>() { "00:00:00", "PaintVideo", "0.6196" }, 
+                }
+            };
+
+            parser.ParseTraceLog(file, "D:\\Temp\\");
+
+            Assert.Equal(expectedFrameTime, actualFrameTime);
+            Assert.Equal(expectedRunTime, actualRunTime);
+        }
+
+        [Fact]
+        public void ParseTraceLog_FrameTimeOnlyTraceLogOneFrame_ReturnCSVFileWithOneEntry()
+        {
+            TraceLogParser parser = new();
+            CSVFile actualFrameTime = new();
+            parser.onParsed += (CSVFile file) => { actualFrameTime = file; };
+            TraceLogFile file = new()
+            {
+                Lines = new()
+                {
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start RenderFrame [1] | Frame: 00:00:00",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop RenderFrame [1]-> needs 1.3965 ms | Frame: 00:00:00",
+                },
                 FilePath = "C:\\msvc\\TestLog001.txt"
             };
-            CSVFile expected = new CSVFile()
+            CSVFile expectedFrameTime = new()
             {
-                Seperator = ';',
-                FilePath = "D:\\Temp\\TestLog001.csv",
-                Headers = new List<string>() { "Frame", "Duration" },
-                Elements = new List<List<string>>() {
-                new List<string>() { "00:00:00", "1.0678" },
-                new List<string>() { "00:00:01", "205.145" }}
+                Seperator = GlobalConstants.CSVFileSpererator,
+                FilePath = "D:\\Temp\\TestLog001_FT.csv",
+                Headers = new List<string>()
+                {
+                    GlobalConstants.FrameHeaderText,
+                    GlobalConstants.DurationHeaderText,
+                },
+                Elements = new List<List<string>>()
+                {
+                    new List<string>() { "00:00:00", "1.3965" },
+                }
             };
 
-            var result = parser.ParseTraceLog(file, "D:\\Temp\\");
+            parser.ParseTraceLog(file, "D:\\Temp\\");
 
-            Assert.True(result.Equals(expected));
+            Assert.Equal(expectedFrameTime, actualFrameTime);
         }
 
         [Fact]
-        public void ParseTraceLog_GivenCustomFilePath_ReturnCSVFileWithCorrectFilePathAndName()
+        public void ParseTraceLog_FullTraceLogMultipleFrames_ReturnCSVFilesWithMultipleEntries()
         {
             TraceLogParser parser = new();
-            TraceLogFile file = new TraceLogFile() { Lines = new List<string>() { "2021/06/22 23:28:19 [INFO]    [VideoEngine]: 00:00:00 1.0678" }, FilePath = "C:\\msvc\\TestLog001.txt" };
+            int _callCount = 0;
+            CSVFile actualFrameTime = new();
+            CSVFile actualRunTime = new();
+            parser.onParsed += (CSVFile file) => { if (_callCount == 0) actualFrameTime = file; else actualRunTime = file; };
+            TraceLogFile file = new()
+            {
+                Lines = new()
+                {
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start RenderFrame [1] | Frame: 00:00:00",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start GetVideoFrameFromVIP [61]",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop GetVideoFrameFromVIP [61]-> needs 0.6304 ms",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start PaintVideo [61]",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop PaintVideo [61]-> needs 0.6196 ms",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop RenderFrame [1]-> needs 1.3965 ms | Frame: 00:00:00",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start RenderFrame [1] | Frame: 00:00:01",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start GetVideoFrameFromVIP [61]",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop GetVideoFrameFromVIP [61]-> needs 0.6304 ms",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start PaintVideo [61]",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop PaintVideo [61]-> needs 0.6196 ms",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop RenderFrame [1]-> needs 1.3965 ms | Frame: 00:00:01",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start RenderFrame [1] | Frame: 00:00:02",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start GetVideoFrameFromVIP [61]",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop GetVideoFrameFromVIP [61]-> needs 0.6304 ms",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start PaintVideo [61]",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop PaintVideo [61]-> needs 0.6196 ms",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop RenderFrame [1]-> needs 1.3965 ms | Frame: 00:00:02",
+                },
+                FilePath = "C:\\msvc\\TestLog001.txt"
+            };
+            CSVFile expectedFrameTime = new()
+            {
+                Seperator = GlobalConstants.CSVFileSpererator,
+                FilePath = "D:\\Temp\\TestLog001_FT.csv",
+                Headers = new List<string>()
+                {
+                    GlobalConstants.FrameHeaderText,
+                    GlobalConstants.DurationHeaderText,
+                },
+                Elements = new List<List<string>>()
+                {
+                    new List<string>() { "00:00:00", "1.3965" },
+                    new List<string>() { "00:00:01", "1.3965" },
+                    new List<string>() { "00:00:02", "1.3965" },
+                }
+            };
+            CSVFile expectedRunTime = new()
+            {
+                Seperator = GlobalConstants.CSVFileSpererator,
+                FilePath = "D:\\Temp\\TestLog001_RT.csv",
+                Headers = new List<string>()
+                {
+                    GlobalConstants.FrameHeaderText,
+                    GlobalConstants.MethodNameHeaderText,
+                    GlobalConstants.RunTimeHeaderText,
+                },
+                Elements = new List<List<string>>()
+                {
+                    new List<string>() { "00:00:00", "GetVideoFrameFromVIP", "0.6304" },
+                    new List<string>() { "00:00:00", "PaintVideo", "0.6196" },
+                    new List<string>() { "00:00:01", "GetVideoFrameFromVIP", "0.6304" },
+                    new List<string>() { "00:00:01", "PaintVideo", "0.6196" },
+                    new List<string>() { "00:00:02", "GetVideoFrameFromVIP", "0.6304" },
+                    new List<string>() { "00:00:02", "PaintVideo", "0.6196" },
+                }
+            };
 
-            var result = parser.ParseTraceLog(file, "D:\\Temp\\");
+            parser.ParseTraceLog(file, "D:\\Temp\\");
 
-            Assert.Equal("D:\\Temp\\TestLog001.csv", result.FilePath);
+            Assert.Equal(expectedFrameTime, actualFrameTime);
+            Assert.Equal(expectedRunTime, actualRunTime);
+        }
+
+        [Fact]
+        public void ParseTraceLog_FrameTimeOnlyTraceLogMutlipleFrames_ReturnCSVFileWithMultipleEntries()
+        {
+            TraceLogParser parser = new();
+            CSVFile actualFrameTime = new();
+            parser.onParsed += (CSVFile file) => { actualFrameTime = file; };
+            TraceLogFile file = new()
+            {
+                Lines = new()
+                {
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start RenderFrame [1] | Frame: 00:00:00",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop RenderFrame [1]-> needs 1.3965 ms | Frame: 00:00:00",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start RenderFrame [1] | Frame: 00:00:01",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop RenderFrame [1]-> needs 1.3965 ms | Frame: 00:00:01",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Start RenderFrame [1] | Frame: 00:00:02",
+                    "2021/09/29 14:40:44 [INFO]    [PerformanceMeasurement]: Stop RenderFrame [1]-> needs 1.3965 ms | Frame: 00:00:02",
+                },
+                FilePath = "C:\\msvc\\TestLog001.txt"
+            };
+            CSVFile expectedFrameTime = new()
+            {
+                Seperator = GlobalConstants.CSVFileSpererator,
+                FilePath = "D:\\Temp\\TestLog001_FT.csv",
+                Headers = new List<string>()
+                {
+                    GlobalConstants.FrameHeaderText,
+                    GlobalConstants.DurationHeaderText,
+                },
+                Elements = new List<List<string>>()
+                {
+                    new List<string>() { "00:00:00", "1.3965" },
+                    new List<string>() { "00:00:01", "1.3965" },
+                    new List<string>() { "00:00:02", "1.3965" },
+                }
+            };
+
+            parser.ParseTraceLog(file, "D:\\Temp\\");
+
+            Assert.Equal(expectedFrameTime, actualFrameTime);
         }
     }
 }

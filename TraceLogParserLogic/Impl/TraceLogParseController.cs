@@ -19,6 +19,8 @@ namespace tracelogparserlogic
             TextFileReader = textFileReader;
             CSVFileWriter = csvFileWriter;
             TraceLogParser = traceLogParser;
+
+            TraceLogParser.onParsed += (CSVFile file) => { CSVFileWriter.WriteCSVFile(file); };
         }
 
         public void ParseTraceLogToCSV(string dst, List<string> srcFiles)
@@ -26,8 +28,7 @@ namespace tracelogparserlogic
             foreach (var file in srcFiles)
             {
                 TraceLogFile textFile = TextFileReader.ReadTextFile(file);
-                CSVFile parsed = TraceLogParser.ParseTraceLog(textFile, dst);
-                CSVFileWriter.WriteCSVFile(parsed);
+                TraceLogParser.ParseTraceLog(textFile, dst);
             }
         }
     }

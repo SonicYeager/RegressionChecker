@@ -51,4 +51,13 @@ namespace tracelogparserlogic
         }
     }
 
+    public readonly struct GlobalConstants
+    {
+        public static char CSVFileSpererator { get; } = ';';
+        public static string FrameHeaderText { get; } = "Frame";
+        public static string DurationHeaderText { get; } = "Duration";
+        public static string MethodNameHeaderText { get; } = "MethodName";
+        public static string RunTimeHeaderText { get; } = "RunTime";
+    }
+
 }

@@ -18,20 +18,19 @@ namespace tracelogparserlogic
     //parse framecount                             (?<Minute>\d\d):(?<Second>\d\d):(?<Frames>\d\d)
     public class TraceLogParser : ITraceLogParser
     {
-        public CSVFile ParseTraceLog(TraceLogFile traceLogFile, string dstPath)
+        public event OnParsed onParsed;
+
+        void ParseTraceLogFrameTimeOnly(TraceLogFile traceLogFile, string dstPath)
         {
             List<List<string>> parsedElements = new();
 
-            //if (!Path.EndsInDirectorySeparator(Path.GetFullPath(dstPath))) //temp
-            //    throw new IOException("Destination Path is not a Directory");
-
             var newPath = Path.GetFullPath(dstPath) + Path.GetFileNameWithoutExtension(Path.GetFullPath(traceLogFile.FilePath)) + ".csv";
-                 
+
             foreach (string line in traceLogFile.Lines)
             {
                 List<string> results = new();
 
-                Regex regex = new ("(?<IsDataLine>([[]{1}INFO[]]{1}\\s+[[]{1}VideoEngine[]]{1})?(?<Data>\\d\\d:\\d\\d:\\d\\d)\\s(\\d+.\\d+$))");
+                Regex regex = new("(?<IsDataLine>([[]{1}INFO[]]{1}\\s+[[]{1}VideoEngine[]]{1})?(?<Data>\\d\\d:\\d\\d:\\d\\d)\\s(\\d+.\\d+$))");
                 Match match = regex.Match(line);
                 if (match.Success)
                 {
@@ -58,7 +57,21 @@ namespace tracelogparserlogic
                 }
             }
 
-            return new CSVFile() { Seperator=';', FilePath=newPath, Headers=new List<string>() { "Frame", "Duration" }, Elements=parsedElements };
+            onParsed.Invoke(new CSVFile() { Seperator = ';', FilePath = newPath, Headers = new List<string>() { "Frame", "Duration" }, Elements = parsedElements }); //frameTime
+        }
+
+        void ParseTraceLogFrameAndRunTime(TraceLogFile traceLogFile, string dstPath)
+        {
+            List<List<string>> parsedFrameTimes = new();
+            List<List<string>> parsedRunTimes = new();
+
+            var newPath = Path.GetFullPath(dstPath) + Path.GetFileNameWithoutExtension(Path.GetFullPath(traceLogFile.FilePath)) + ".csv";
+        }
+
+        public void ParseTraceLog(TraceLogFile traceLogFile, string dstPath)
+        {
+            //dtermine style of logfile
+            //start corresponding algo
         }
     }
 }
