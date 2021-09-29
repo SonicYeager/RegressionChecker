@@ -4,7 +4,6 @@ using System.Collections.Generic;
 namespace regressionevallogic
 {
     public delegate void OnOutput(string msg);
-    public delegate void OnRegressionEvaluation(CSVFile file);
 
     public interface ICommandParser
     {
@@ -15,9 +14,7 @@ namespace regressionevallogic
 
     public interface IRegressionEvaluator
     {
-        public void EvaluateRegression(CSVFile file);
-
-        public event OnRegressionEvaluation onRegressionEvaluation;
+        public CSVFile EvaluateRegression(ReferenceData refData, LatestData latestData, string path);
     }
 
     public interface ICSVFileWriter

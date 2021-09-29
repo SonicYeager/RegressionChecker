@@ -11,8 +11,8 @@ namespace UnitTests
         public void ParseCLIArgs_ArgsWithDestinationAndOneSourceFrameTimeFlag_ReturnCSVFileWithOneEntry()
         {
             CommandParser parser = new();
-            List<string> args = new() { "tracelogparser.exe", "D:\\", "-f", "D:\\video_pro_x_662_original.log" };
-            ParseCommandData expected = new() { DestinationPath = "D:\\", SourceFilePaths = new List<string>() { "D:\\video_pro_x_662_original.log" }, DataTimeType=DATATIMETYPE.FRAMETIME };
+            List<string> args = new() { "regressioneval.exe", "D:\\", "-r", "D:\\TestLog_FT.csv", "-l", "D:\\TestLog001_RT.csv" };
+            ParseCommandData expected = new() { DestinationPath = "D:\\", ReferenceFilePaths = new List<string>() { "D:\\TestLog_FT.csv" }, LatestFilePaths = new List<string>() { "D:\\TestLog001_RT.csv" } };
 
             var actual = parser.ParseCLIArgs(args);
 
@@ -20,24 +20,31 @@ namespace UnitTests
         }
 
         [Fact]
-        public void ParseCLIArgs_ArgsWithDestinationAndMultipleSourceNoFlags_ReturnCSVFileWithMultipleEntry()
+        public void ParseCLIArgs_ArgsWithDestinationAndMultipleSource_ReturnCSVFileWithMultipleEntry()
         {
             CommandParser parser = new();
             List<string> args = new()
             {
-                "tracelogparser.exe",
+                "regressioneval.exe",
                 "D:\\",
-                "D:\\video_pro_x_662_original.log",
-                "D:\\video_pro_x_663_original.log",
-                "D:\\video_pro_x_664_original.log"
+                "-r",
+                "D:\\video_pro_x_662_original.csv",
+                "D:\\video_pro_x_663_original.csv",
+                "-l",                         
+                "D:\\video_pro_x_664_original.csv",
             };
             ParseCommandData expected = new()
             {
                 DestinationPath = "D:\\",
-                SourceFilePaths = new List<string>() {
-                "D:\\video_pro_x_662_original.log",
-                "D:\\video_pro_x_663_original.log",
-                "D:\\video_pro_x_664_original.log"}
+                ReferenceFilePaths = new List<string>()
+                {
+                "D:\\video_pro_x_662_original.csv",
+                "D:\\video_pro_x_663_original.csv",
+                },
+                LatestFilePaths = new List<string>()
+                {
+                "D:\\video_pro_x_664_original.csv",
+                }
             };
 
             var actual = parser.ParseCLIArgs(args);
@@ -51,14 +58,14 @@ namespace UnitTests
             CommandParser parser = new();
             List<string> args = new()
             {
-                "tracelogparser.exe"
+                "regressioneval.exe"
             };
             string errMsg = "";
             parser.onOutput += (string msg) => { errMsg = msg; };
 
             var actual = parser.ParseCLIArgs(args);
 
-            Assert.Equal("Wrong Input!Try:\ntracelosparser.exe <destPath> <srcPath> [srcPath]", errMsg);
+            Assert.Equal("Wrong Input!Try:\regressioneval.exe <destPath> -r <refPath> [refPath] -l <latestPath>", errMsg);
         }
 
         //with incorrect -> expect eventcall

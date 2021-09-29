@@ -27,24 +27,41 @@ namespace regressionevallogic
         }
     }
 
-    public enum DATATIMETYPE
-    {
-        FRAMETIME = 0,
-        RUNTIME = 1
-    }
-
     public struct ParseCommandData : IEquatable<ParseCommandData>
     {
         public string DestinationPath { get; set; }
-        public List<string> SourceFilePaths { get; set; }
-
-        public DATATIMETYPE DataTimeType { get; set; }
+        public List<string> ReferenceFilePaths { get; set; }
+        public List<string> LatestFilePaths { get; set; }
 
         public bool Equals(ParseCommandData other)
         {
             return DestinationPath == other.DestinationPath &&
-                   SourceFilePaths.SequenceEqual(other.SourceFilePaths) &&
-                   DataTimeType == other.DataTimeType;
+                   ReferenceFilePaths.SequenceEqual(other.ReferenceFilePaths) &&
+                   LatestFilePaths.SequenceEqual(other.LatestFilePaths);
+        }
+    }
+
+    public struct ReferenceData : IEquatable<ReferenceData>
+    {
+        public List<CSVFile> FrameTimes { get; set; }
+        public List<CSVFile> MethodRunTimesPerFrame { get; set; }
+
+        public bool Equals(ReferenceData other)
+        {
+            return FrameTimes.SequenceEqual(other.FrameTimes) &&
+                MethodRunTimesPerFrame.SequenceEqual(other.MethodRunTimesPerFrame);
+        }
+    }
+
+    public struct LatestData : IEquatable<LatestData>
+    {
+        public CSVFile FrameTimes { get; set; }
+        public CSVFile MethodRunTimesPerFrame { get; set; }
+
+        public bool Equals(LatestData other)
+        {
+            return Equals(FrameTimes, other.FrameTimes) &&
+                Equals(MethodRunTimesPerFrame, other.MethodRunTimesPerFrame);
         }
     }
 }
