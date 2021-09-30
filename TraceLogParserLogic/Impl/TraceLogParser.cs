@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace tracelogparserlogic
 {
@@ -49,32 +45,40 @@ namespace tracelogparserlogic
             return match.Success;
         }
 
-        bool HasFrameCount(string line)
+        string GetFrameCount(string line)
         {
             Regex regex = new("(?<Frame>\\d\\d:\\d\\d:\\d\\d$)");
             Match match = regex.Match(line);
-            return match.Success;
+            Group val;
+            match.Groups.TryGetValue("Frame", out val);
+            return val.Value;
         }
 
-        bool HasFrameTime(string line)
+        string GetFrameTime(string line)
+        {
+            Regex regex = new("(?<FrameTime>(\\d+.\\d+(?=\\sms)))");
+            Match match = regex.Match(line);
+            Group val;
+            match.Groups.TryGetValue("FrameTime", out val);
+            return val.Value;
+        }
+
+        string GetDuration(string line)
         {
             Regex regex = new("(?<Duration>(\\d+.\\d+(?=\\sms)))");
             Match match = regex.Match(line);
-            return match.Success;
+            Group val;
+            match.Groups.TryGetValue("Duration", out val);
+            return val.Value;
         }
 
-        bool HasDuration(string line)
-        {
-            Regex regex = new("(?<Duration>(\\d+.\\d+(?=\\sms)))");
-            Match match = regex.Match(line);
-            return match.Success;
-        }
-
-        bool HasMethodName(string line)
+        string GetMethodName(string line)
         {
             Regex regex = new("(?<MethodName>(\\w*(?=\\s[[]\\d*[]])))"); //TODO
             Match match = regex.Match(line);
-            return match.Success;
+            Group val;
+            match.Groups.TryGetValue("MethodName", out val);
+            return val.Value;
         }
 
         public void ParseTraceLog(TraceLogFile traceLogFile, string dstPath)
@@ -85,39 +89,43 @@ namespace tracelogparserlogic
             var newFTPath = Path.GetFullPath(dstPath) + Path.GetFileNameWithoutExtension(Path.GetFullPath(traceLogFile.FilePath)) + "_FT" + ".csv";
             var newRTPath = Path.GetFullPath(dstPath) + Path.GetFileNameWithoutExtension(Path.GetFullPath(traceLogFile.FilePath)) + "_RT" + ".csv";
 
+            string frameCount = "";
+
             foreach (string line in traceLogFile.Lines)
             {
-                List<string> results = new();
+                List<string> frameTimeRes = new();
+                List<string> runTimeRes = new();
 
-                Regex regex = new("(?<IsStartFrameTimeLine>([[]{1}INFO[]]{1}\\s+[[]{1}PerformanceMeasurement[]]{1}:)?(?<Data>\\d\\d:\\d\\d:\\d\\d)\\s(\\d+.\\d+$))");
-                Match match = regex.Match(line);
-                if (match.Success)
+
+                if (IsStartFrameTimeLine(line))
+                    frameCount = GetFrameCount(line);
+                else if(IsStopMethodTimeLine(line) && !IsStopFrameTimeLine(line) && frameCount != "")
                 {
-                    string datablock = match.Value;
-                    regex = new("(?<Frame>\\d\\d:\\d\\d:\\d\\d)");
-                    match = regex.Match(datablock);
-                    if (match.Success)
-                    {
-                        var groups = match.Groups;
-                        Group group;
-                        groups.TryGetValue("Frame", out group);
-                        results.Add(group.Value);
-                    }
-                    regex = new("(?<Duration>(\\d+.\\d+$))");
-                    match = regex.Match(datablock);
-                    if (match.Success)
-                    {
-                        var groups = match.Groups;
-                        Group group;
-                        groups.TryGetValue("Duration", out group);
-                        results.Add(group.Value);
-                    }
-                    parsedFrameTime.Add(results);
+                    var name = GetMethodName(line);
+                    var dur = GetDuration(line);
+
+                    runTimeRes.Add(frameCount);
+                    runTimeRes.Add(name);
+                    runTimeRes.Add(dur);
+
+                    parsedRunTime.Add(runTimeRes);
+                }
+                else if (IsStopFrameTimeLine(line))
+                {
+                    var dur = GetFrameTime(line);
+
+                    frameTimeRes.Add(frameCount);
+                    frameTimeRes.Add(dur);
+
+                    parsedFrameTime.Add(frameTimeRes);
+
+                    frameCount = "";
                 }
             }
 
             onParsed.Invoke(new CSVFile() { Seperator = ';', FilePath = newFTPath, Headers = new List<string>() { GlobalConstants.FrameHeaderText, GlobalConstants.DurationHeaderText }, Elements = parsedFrameTime }); //frameTime
-            onParsed.Invoke(new CSVFile() { Seperator = ';', FilePath = newRTPath, Headers = new List<string>() { GlobalConstants.FrameHeaderText, GlobalConstants.MethodNameHeaderText, GlobalConstants.RunTimeHeaderText }, Elements = parsedRunTime }); //frameTime
+            if(parsedRunTime.Count > 0) 
+                onParsed.Invoke(new CSVFile() { Seperator = ';', FilePath = newRTPath, Headers = new List<string>() { GlobalConstants.FrameHeaderText, GlobalConstants.MethodNameHeaderText, GlobalConstants.RunTimeHeaderText }, Elements = parsedRunTime }); //frameTime
         }
     }
 }

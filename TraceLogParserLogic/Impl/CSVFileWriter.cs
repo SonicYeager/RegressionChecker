@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace tracelogparserlogic
@@ -11,7 +7,7 @@ namespace tracelogparserlogic
     {
         public void WriteCSVFile(CSVFile file)
         {
-            if(File.Exists(Path.GetFullPath(file.FilePath)))
+            if (File.Exists(Path.GetFullPath(file.FilePath)))
                 File.Delete(Path.GetFullPath(file.FilePath));
             using var writer = File.CreateText(Path.GetFullPath(file.FilePath));
             string headerLine = "";

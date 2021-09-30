@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace tracelogparserlogic
@@ -12,7 +8,7 @@ namespace tracelogparserlogic
         public TraceLogFile ReadTextFile(string path)
         {
             List<string> readLines = new();
-            TraceLogFile traceLogFile = new() { FilePath = Path.GetFullPath(path), Lines = readLines};
+            TraceLogFile traceLogFile = new() { FilePath = Path.GetFullPath(path), Lines = readLines };
 
             if (File.Exists(Path.GetFullPath(path)))
             {

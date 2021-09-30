@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace tracelogparserlogic
 {
@@ -17,7 +13,7 @@ namespace tracelogparserlogic
                 onOutput.Invoke("Wrong Input!Try:\ntracelosparser.exe <destPath> <srcPath> [srcPath]");
                 return new ParseCommandData();
             }
-            var parsed = new ParseCommandData() { DestinationPath = args[1], SourceFilePaths = new List<string>()};
+            var parsed = new ParseCommandData() { DestinationPath = args[1], SourceFilePaths = new List<string>() };
             for (int i = 2; i < args.Count; ++i)
                 parsed.SourceFilePaths.Add(args[i]);
             return parsed;

@@ -14,7 +14,7 @@ namespace UnitTests
             int _callCount = 0;
             CSVFile actualFrameTime = new();
             CSVFile actualRunTime = new();
-            parser.onParsed += (CSVFile file) => { if (_callCount == 0) actualFrameTime = file; else actualRunTime = file; };
+            parser.onParsed += (CSVFile file) => { if (_callCount == 0) { actualFrameTime = file; ++_callCount; } else actualRunTime = file; };
             TraceLogFile file = new () 
             { 
                 Lines = new ()
@@ -107,7 +107,7 @@ namespace UnitTests
             int _callCount = 0;
             CSVFile actualFrameTime = new();
             CSVFile actualRunTime = new();
-            parser.onParsed += (CSVFile file) => { if (_callCount == 0) actualFrameTime = file; else actualRunTime = file; };
+            parser.onParsed += (CSVFile file) => { if (_callCount == 0) { actualFrameTime = file; ++_callCount; } else actualRunTime = file; };
             TraceLogFile file = new()
             {
                 Lines = new()
