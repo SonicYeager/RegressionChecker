@@ -30,14 +30,14 @@ namespace regressionevallogic
     public struct ParseCommandData : IEquatable<ParseCommandData>
     {
         public string DestinationPath { get; set; }
-        public List<string> ReferenceFilePaths { get; set; }
-        public List<string> LatestFilePaths { get; set; }
+        public List<ToDataFilePaths> ReferenceFilePaths { get; set; }
+        public ToDataFilePaths LatestFilePaths { get; set; }
 
         public bool Equals(ParseCommandData other)
         {
             return DestinationPath == other.DestinationPath &&
                    ReferenceFilePaths.SequenceEqual(other.ReferenceFilePaths) &&
-                   LatestFilePaths.SequenceEqual(other.LatestFilePaths);
+                   Equals(LatestFilePaths, other.LatestFilePaths);
         }
     }
 
@@ -59,6 +59,18 @@ namespace regressionevallogic
         public CSVFile MethodRunTimesPerFrame { get; set; }
 
         public bool Equals(LatestData other)
+        {
+            return Equals(FrameTimes, other.FrameTimes) &&
+                Equals(MethodRunTimesPerFrame, other.MethodRunTimesPerFrame);
+        }
+    }
+
+    public struct ToDataFilePaths : IEquatable<ToDataFilePaths>
+    {
+        public string FrameTimes { get; set; }
+        public string MethodRunTimesPerFrame { get; set; }
+
+        public bool Equals(ToDataFilePaths other)
         {
             return Equals(FrameTimes, other.FrameTimes) &&
                 Equals(MethodRunTimesPerFrame, other.MethodRunTimesPerFrame);

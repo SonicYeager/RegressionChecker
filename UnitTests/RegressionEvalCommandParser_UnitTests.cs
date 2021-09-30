@@ -7,20 +7,9 @@ namespace UnitTests
 {
     public class RegressionEvalCommandParser_UnitTests
     {
-        [Fact]
-        public void ParseCLIArgs_ArgsWithDestinationAndOneSourceFrameTimeFlag_ReturnCSVFileWithOneEntry()
-        {
-            CommandParser parser = new();
-            List<string> args = new() { "regressioneval.exe", "D:\\", "-r", "D:\\TestLog_FT.csv", "-l", "D:\\TestLog001_RT.csv" };
-            ParseCommandData expected = new() { DestinationPath = "D:\\", ReferenceFilePaths = new List<string>() { "D:\\TestLog_FT.csv" }, LatestFilePaths = new List<string>() { "D:\\TestLog001_RT.csv" } };
-
-            var actual = parser.ParseCLIArgs(args);
-
-            Assert.Equal(expected, actual);
-        }
 
         [Fact]
-        public void ParseCLIArgs_ArgsWithDestinationAndMultipleSource_ReturnCSVFileWithMultipleEntry()
+        public void ParseCLIArgs_FullArgsWithOnlyFrameTimes_ReturnFullCommandData()
         {
             CommandParser parser = new();
             List<string> args = new()
@@ -28,23 +17,154 @@ namespace UnitTests
                 "regressioneval.exe",
                 "D:\\",
                 "-r",
-                "D:\\video_pro_x_662_original.csv",
-                "D:\\video_pro_x_663_original.csv",
-                "-l",                         
-                "D:\\video_pro_x_664_original.csv",
+                "D:\\TestLog_FT.csv",
+                "-l",
+                "D:\\TestLog001_FT.csv",
             };
             ParseCommandData expected = new()
             {
                 DestinationPath = "D:\\",
-                ReferenceFilePaths = new List<string>()
+                ReferenceFilePaths = new()
                 {
-                "D:\\video_pro_x_662_original.csv",
-                "D:\\video_pro_x_663_original.csv",
+                    new ToDataFilePaths()
+                    {
+                        FrameTimes = "D:\\TestLog_FT.csv",
+                        MethodRunTimesPerFrame = ""
+                    },
                 },
-                LatestFilePaths = new List<string>()
+                LatestFilePaths = new ToDataFilePaths()
                 {
-                "D:\\video_pro_x_664_original.csv",
-                }
+                    FrameTimes = "D:\\TestLog001_FT.csv",
+                    MethodRunTimesPerFrame = "",
+                },
+            };
+
+            var actual = parser.ParseCLIArgs(args);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void ParseCLIArgs_FullArgsWithShortFlags_ReturnFullCommandData()
+        {
+            CommandParser parser = new();
+            List<string> args = new() 
+            { 
+                "regressioneval.exe", 
+                "D:\\", 
+                "-r", 
+                "D:\\TestLog_FT.csv", 
+                "D:\\TestLog_RT.csv", 
+                "-l", 
+                "D:\\TestLog001_FT.csv", 
+                "D:\\TestLog001_RT.csv", 
+            };
+            ParseCommandData expected = new() 
+            {
+                DestinationPath = "D:\\",
+                ReferenceFilePaths = new ()
+                {
+                    new ToDataFilePaths()
+                    {
+                        FrameTimes="D:\\TestLog_FT.csv",
+                        MethodRunTimesPerFrame="D:\\TestLog_RT.csv"
+                    },
+                },
+                LatestFilePaths = new ToDataFilePaths()
+                { 
+                    FrameTimes="D:\\TestLog001_FT.csv",
+                    MethodRunTimesPerFrame ="D:\\TestLog001_RT.csv",
+                }, 
+            };
+
+            var actual = parser.ParseCLIArgs(args);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void ParseCLIArgs_FullArgsWithLongFlags_ReturnFullCommandData()
+        {
+            CommandParser parser = new();
+            List<string> args = new()
+            {
+                "regressioneval.exe",
+                "D:\\",
+                "--reference",
+                "D:\\TestLog_FT.csv",
+                "D:\\TestLog_RT.csv",
+                "--latest",
+                "D:\\TestLog001_FT.csv",
+                "D:\\TestLog001_RT.csv",
+            };
+            ParseCommandData expected = new()
+            {
+                DestinationPath = "D:\\",
+                ReferenceFilePaths = new()
+                {
+                    new ToDataFilePaths()
+                    {
+                        FrameTimes = "D:\\TestLog_FT.csv",
+                        MethodRunTimesPerFrame = "D:\\TestLog_RT.csv"
+                    },
+                },
+                LatestFilePaths = new ToDataFilePaths()
+                {
+                    FrameTimes = "D:\\TestLog001_FT.csv",
+                    MethodRunTimesPerFrame = "D:\\TestLog001_RT.csv",
+                },
+            };
+
+            var actual = parser.ParseCLIArgs(args);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void ParseCLIArgs_FullArgsWithMutlipleRefs_ReturnFullCommandDataWithMultipleRefs()
+        {
+            CommandParser parser = new();
+            List<string> args = new()
+            {
+                "regressioneval.exe",
+                "D:\\",
+                "-r",
+                "D:\\TestLog_FT.csv",
+                "D:\\TestLog_RT.csv",
+                "D:\\TestLog2_FT.csv",
+                "D:\\TestLog2_RT.csv",
+                "D:\\TestLog3_FT.csv",
+                "D:\\TestLog3_RT.csv",
+                "-l",
+                "D:\\TestLog001_FT.csv",
+                "D:\\TestLog001_RT.csv",
+            };
+            ParseCommandData expected = new()
+            {
+                DestinationPath = "D:\\",
+                ReferenceFilePaths = new()
+                {
+                    new ToDataFilePaths()
+                    {
+                        FrameTimes = "D:\\TestLog_FT.csv",
+                        MethodRunTimesPerFrame = "D:\\TestLog_RT.csv"
+                    },
+                    new ToDataFilePaths()
+                    {
+                        FrameTimes = "D:\\TestLog2_FT.csv",
+                        MethodRunTimesPerFrame = "D:\\TestLog2_RT.csv"
+                    },
+                    new ToDataFilePaths()
+                    {
+                        FrameTimes = "D:\\TestLog3_FT.csv",
+                        MethodRunTimesPerFrame = "D:\\TestLog3_RT.csv"
+                    },
+                },
+                LatestFilePaths = new ToDataFilePaths()
+                {
+                    FrameTimes = "D:\\TestLog001_FT.csv",
+                    MethodRunTimesPerFrame = "D:\\TestLog001_RT.csv",
+                },
             };
 
             var actual = parser.ParseCLIArgs(args);
@@ -65,9 +185,7 @@ namespace UnitTests
 
             var actual = parser.ParseCLIArgs(args);
 
-            Assert.Equal("Wrong Input!Try:\regressioneval.exe <destPath> -r <refPath> [refPath] -l <latestPath>", errMsg);
+            Assert.Equal("Wrong Input!", errMsg);
         }
-
-        //with incorrect -> expect eventcall
     }
 }
