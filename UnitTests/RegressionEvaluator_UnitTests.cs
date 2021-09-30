@@ -47,7 +47,7 @@ namespace UnitTests
             };
             CSVFile expected = new CSVFile()
             {
-                FilePath = "C:\\msvc\\TestLog001_FTRL0.csv",
+                FilePath = "C:\\msvc\\TestLog001_FT_RL.csv",
                 Headers = new List<string>() { "Frame", "MethodName", "RunTime" },
                 Elements = new List<List<string>>() {
                 }
@@ -56,7 +56,7 @@ namespace UnitTests
             var result = eval.EvaluateRegression(
                 new ReferenceData() { FrameTimes=new List<CSVFile>() { refFrameTimes }, MethodRunTimesPerFrame=new List<CSVFile>() { refRunTimes } },
                 new LatestData() { FrameTimes=frameTimes, MethodRunTimesPerFrame=runTimes },
-                "D:\\Temp\\");
+                "D:\\Temp");
             
             Assert.Equal(expected, result);
         }
@@ -112,7 +112,7 @@ namespace UnitTests
             var result = eval.EvaluateRegression(
                 new ReferenceData() { FrameTimes = new List<CSVFile>() { refFrameTimes }, MethodRunTimesPerFrame = new List<CSVFile>() { refRunTimes } },
                 new LatestData() { FrameTimes = frameTimes, MethodRunTimesPerFrame = runTimes },
-                "D:\\Temp\\");
+                "D:\\Temp");
 
             Assert.Equal(expected, result);
         }
