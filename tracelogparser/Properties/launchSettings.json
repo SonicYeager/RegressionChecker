@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "tracelogparser": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\!REPOS\\RegressionChecker\\SysTests\\TestResults D:\\!REPOS\\RegressionChecker\\SysTests\\ForTests\\video_pro_x_u_x64.log"
+    }
+  }
+}

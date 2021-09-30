@@ -59,7 +59,7 @@ namespace UnitTests
                 }
             };
 
-            parser.ParseTraceLog(file, "D:\\Temp\\");
+            parser.ParseTraceLog(file, "D:\\Temp");
 
             Assert.Equal(expectedFrameTime, actualFrameTime);
             Assert.Equal(expectedRunTime, actualRunTime);
@@ -95,7 +95,7 @@ namespace UnitTests
                 }
             };
 
-            parser.ParseTraceLog(file, "D:\\Temp\\");
+            parser.ParseTraceLog(file, "D:\\Temp");
 
             Assert.Equal(expectedFrameTime, actualFrameTime);
         }
@@ -170,7 +170,7 @@ namespace UnitTests
                 }
             };
 
-            parser.ParseTraceLog(file, "D:\\Temp\\");
+            parser.ParseTraceLog(file, "D:\\Temp");
 
             Assert.Equal(expectedFrameTime, actualFrameTime);
             Assert.Equal(expectedRunTime, actualRunTime);
@@ -212,7 +212,7 @@ namespace UnitTests
                 }
             };
 
-            parser.ParseTraceLog(file, "D:\\Temp\\");
+            parser.ParseTraceLog(file, "D:\\Temp");
 
             Assert.Equal(expectedFrameTime, actualFrameTime);
         }

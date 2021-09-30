@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using tracelogparserlogic;
 
 namespace tracelogparser
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            List<string> listArgs = new List<string>(args);
+            List<string> listArgs = new List<string>(Environment.GetCommandLineArgs());
 
             //init all
             ITextFileReader txtFileReader = new TextFileReader();

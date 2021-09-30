@@ -19,14 +19,14 @@ namespace tracelogparserlogic
 
         bool IsStartFrameTimeLine(string line)
         {
-            Regex regex = new("(?<IsStart>[[]{1}INFO[]]{1}\\s+[[]{1}PerformanceMeasurement[]]{1}:\\sStart\\s\\w*\\s[[]\\d[]]\\s[|]\\sFrame:)");
+            Regex regex = new("(?<IsStart>[[]{1}INFO[]]{1}\\s+[[]{1}PerformanceMeasurement[]]{1}:\\sStart\\s\\w*\\s[[]\\d*[]]\\s[|]\\sFrame:)");
             Match match = regex.Match(line);
             return match.Success;
         }
 
         bool IsStopFrameTimeLine(string line)
         {
-            Regex regex = new("(?<IsStop>[[]{1}INFO[]]{1}\\s+[[]{1}PerformanceMeasurement[]]{1}:\\sStop\\s\\w*\\s[[]\\d[]]->\\s\\w*\\s\\d.\\d*\\sms\\s[|]\\sFrame:)");
+            Regex regex = new("(?<IsStop>[[]{1}INFO[]]{1}\\s+[[]{1}PerformanceMeasurement[]]{1}:\\sStop\\s\\w*\\s[[]\\d*[]]->\\s\\w*\\s\\d.\\d*\\sms\\s[|]\\sFrame:)");
             Match match = regex.Match(line);
             return match.Success;
         }
@@ -56,7 +56,7 @@ namespace tracelogparserlogic
 
         string GetFrameTime(string line)
         {
-            Regex regex = new("(?<FrameTime>(\\d+.\\d+(?=\\sms)))");
+            Regex regex = new("(?<FrameTime>(\\d+.\\d+(?=\\sms))|(\\d+(?=\\sms)))");
             Match match = regex.Match(line);
             Group val;
             match.Groups.TryGetValue("FrameTime", out val);
@@ -65,7 +65,7 @@ namespace tracelogparserlogic
 
         string GetDuration(string line)
         {
-            Regex regex = new("(?<Duration>(\\d+.\\d+(?=\\sms)))");
+            Regex regex = new("(?<Duration>(\\d+.\\d+(?=\\sms))|(\\d+(?=\\sms)))");
             Match match = regex.Match(line);
             Group val;
             match.Groups.TryGetValue("Duration", out val);
@@ -74,7 +74,7 @@ namespace tracelogparserlogic
 
         string GetMethodName(string line)
         {
-            Regex regex = new("(?<MethodName>(\\w*(?=\\s[[]\\d*[]])))"); //TODO
+            Regex regex = new("(?<MethodName>(\\w*(?=\\s[[]\\d*[]])))");
             Match match = regex.Match(line);
             Group val;
             match.Groups.TryGetValue("MethodName", out val);
@@ -86,8 +86,8 @@ namespace tracelogparserlogic
             List<List<string>> parsedFrameTime = new();
             List<List<string>> parsedRunTime = new();
 
-            var newFTPath = Path.GetFullPath(dstPath) + Path.GetFileNameWithoutExtension(Path.GetFullPath(traceLogFile.FilePath)) + "_FT" + ".csv";
-            var newRTPath = Path.GetFullPath(dstPath) + Path.GetFileNameWithoutExtension(Path.GetFullPath(traceLogFile.FilePath)) + "_RT" + ".csv";
+            var newFTPath = Path.GetFullPath(dstPath) + "\\" + Path.GetFileNameWithoutExtension(Path.GetFullPath(traceLogFile.FilePath)) + "_FT" + ".csv";
+            var newRTPath = Path.GetFullPath(dstPath) + "\\" + Path.GetFileNameWithoutExtension(Path.GetFullPath(traceLogFile.FilePath)) + "_RT" + ".csv";
 
             string frameCount = "";
 
@@ -95,7 +95,6 @@ namespace tracelogparserlogic
             {
                 List<string> frameTimeRes = new();
                 List<string> runTimeRes = new();
-
 
                 if (IsStartFrameTimeLine(line))
                     frameCount = GetFrameCount(line);
