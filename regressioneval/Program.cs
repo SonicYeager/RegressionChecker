@@ -14,10 +14,10 @@ namespace regressioneval
             ICSVFileReader csvFileReader = new CSVFileReader();
             IRegressionEvaluator regressionEvaluator = new RegressionEvaluator();
             ICSVFileWriter csvFileWriter = new CSVFileWriter();
-            IRegressionEvaluationController traceLogParseController = new RegressionEvaluatorController(ref csvFileReader, ref csvFileWriter, ref regressionEvaluator);
+            IRegressionEvaluationController regressionEvaluationController = new RegressionEvaluatorController(ref csvFileReader, ref csvFileWriter, ref regressionEvaluator);
             ICommandParser commandParser = new CommandParser();
-            ICLIUI ccliUI = new CLIUI();
-            IMainController mainController = new MainController(ref ccliUI, ref traceLogParseController, ref commandParser);
+            ICLIUI cliUI = new CLIUI();
+            IMainController mainController = new MainController(ref regressionEvaluationController, ref cliUI, ref commandParser);
 
             //run
             mainController.Run(listArgs);

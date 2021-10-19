@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,9 +22,17 @@ namespace regressionevallogic
 
         public event OnOutput onOutput;
 
-        public void EvaluateForRegression(string dst, List<string> srcFiles)
+        public void EvaluateForRegression(string dst, List<string> refPaths, string latestPathsFT, string latestPathsRT)
         {
-            throw new NotImplementedException();
+            ReferenceData refData = new ReferenceData() { FrameTimes = new List<CSVFile>() };
+            LatestData latData = new LatestData();
+            foreach (var path in refPaths)
+                refData.FrameTimes.Add(CSVFileReader.ReadCSVFile(Path.GetFullPath(path)));
+            latData.FrameTimes = CSVFileReader.ReadCSVFile(Path.GetFullPath(latestPathsFT));
+            latData.MethodRunTimesPerFrame = CSVFileReader.ReadCSVFile(Path.GetFullPath(latestPathsRT));
+            var evaluated = RegressinEvaluator.EvaluateRegression(refData, latData, dst);
+            if (evaluated.Elements.Count > 0)
+                CSVFileWriter.WriteCSVFile(evaluated);
         }
     }
 }

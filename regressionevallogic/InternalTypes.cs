@@ -73,12 +73,10 @@ namespace regressionevallogic
     public struct ReferenceData : IEquatable<ReferenceData>
     {
         public List<CSVFile> FrameTimes { get; set; }
-        public List<CSVFile> MethodRunTimesPerFrame { get; set; }
 
         public bool Equals(ReferenceData other)
         {
-            return FrameTimes.SequenceEqual(other.FrameTimes) &&
-                MethodRunTimesPerFrame.SequenceEqual(other.MethodRunTimesPerFrame);
+            return FrameTimes.SequenceEqual(other.FrameTimes);
         }
     }
 

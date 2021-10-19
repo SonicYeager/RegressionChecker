@@ -39,7 +39,7 @@ namespace regressionevallogic
 
     public interface IRegressionEvaluationController
     {
-        public void EvaluateForRegression(string dst, ReferenceData refData, LatestData latestData);
+        public void EvaluateForRegression(string dst, List<string> refPaths, string latestPathsFT, string latestPathsRT);
 
         public event OnOutput onOutput;
     }
