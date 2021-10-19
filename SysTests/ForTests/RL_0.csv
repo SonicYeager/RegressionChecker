@@ -1,0 +1,10 @@
+Frame;MethodName;RunTime;
+00:00:03;GetVideoFrameFromVIP;5.3489;
+00:00:17;GetVideoFrameFromVIP;5.8234;
+00:00:18;GetVideoFrameFromVIP;5.4721;
+03:41:07;GetVideoFrameFromVIP;6.5411;
+03:41:08;GetVideoFrameFromVIP;5.8744;
+03:41:09;GetVideoFrameFromVIP;6.2689;
+03:41:10;GetVideoFrameFromVIP;6.0544;
+03:41:11;GetVideoFrameFromVIP;6.3202;
+03:41:12;GetVideoFrameFromVIP;6.2409;

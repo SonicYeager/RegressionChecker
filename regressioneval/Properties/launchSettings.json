@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "regressioneval": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\!REPOS\\RegressionChecker\\SysTests\\TestResults\\ -r D:\\!REPOS\\RegressionChecker\\SysTests\\ForTests\\video_pro_x_u_x64_FT.csv -l D:\\!REPOS\\RegressionChecker\\SysTests\\ForTests\\video_pro_x_u_x64m_FT.csv D:\\!REPOS\\RegressionChecker\\SysTests\\ForTests\\video_pro_x_u_x64m_RT.csv"
+    }
+  }
+}

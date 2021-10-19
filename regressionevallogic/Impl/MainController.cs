@@ -14,12 +14,18 @@ namespace regressionevallogic
 
         public MainController(ref IRegressionEvaluationController rec, ref ICLIUI cui, ref ICommandParser cp)
         {
-            //TODO
+            RegressionEvaluationController = rec;
+            CLIUI = cui;
+            CommandParser = cp;
+
+            RegressionEvaluationController.onOutput += (string msg) => CLIUI.Print(msg);
+            CommandParser.onOutput += (string msg) => CLIUI.Print(msg);
         }
 
         public void Run(List<string> args)
         {
-            throw new NotImplementedException(); //TODO
+            var parsedArgs = CommandParser.ParseCLIArgs(args);
+            RegressionEvaluationController.EvaluateForRegression(parsedArgs.DestinationPath, parsedArgs.ReferenceFilePaths, parsedArgs.LatestFilePaths.FrameTimes, parsedArgs.LatestFilePaths.MethodRunTimesPerFrame);
         }
     }
 }

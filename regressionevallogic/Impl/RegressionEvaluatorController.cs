@@ -22,12 +22,12 @@ namespace regressionevallogic
 
         public event OnOutput onOutput;
 
-        public void EvaluateForRegression(string dst, List<string> refPaths, string latestPathsFT, string latestPathsRT)
+        public void EvaluateForRegression(string dst, List<ToDataFilePaths> refPaths, string latestPathsFT, string latestPathsRT)
         {
             ReferenceData refData = new ReferenceData() { FrameTimes = new List<CSVFile>() };
             LatestData latData = new LatestData();
             foreach (var path in refPaths)
-                refData.FrameTimes.Add(CSVFileReader.ReadCSVFile(Path.GetFullPath(path)));
+                refData.FrameTimes.Add(CSVFileReader.ReadCSVFile(Path.GetFullPath(path.FrameTimes)));
             latData.FrameTimes = CSVFileReader.ReadCSVFile(Path.GetFullPath(latestPathsFT));
             latData.MethodRunTimesPerFrame = CSVFileReader.ReadCSVFile(Path.GetFullPath(latestPathsRT));
             var evaluated = RegressinEvaluator.EvaluateRegression(refData, latData, dst);

@@ -42,7 +42,7 @@ namespace regressionevallogic
             var newPath = Path.GetFullPath(path) + "RL_" + _count + ".csv";
             ++_count;
 
-            CSVFile evaluated = new() { FilePath = newPath, Seperator = '\0', Elements = new List<List<string>>(), Headers = new List<string>() { "Frame", "MethodName", "RunTime" } }; //objektname?
+            CSVFile evaluated = new() { FilePath = newPath, Seperator = ';', Elements = new List<List<string>>(), Headers = new List<string>() { "Frame", "MethodName", "RunTime" } }; //objektname?
             //get mittelwert from refData
             var averaged = GetAverageFrameTimes(refData.FrameTimes);
             //check for lenght -> use smallest
