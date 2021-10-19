@@ -10,7 +10,7 @@ namespace regressionevallogic
 {
     public class RegressionEvaluator : IRegressionEvaluator
     {
-        static int _count = 0;
+        int _count = 0;
 
         public CSVFile GetAverageFrameTimes(List<CSVFile> frameTimes)
         {

@@ -25,6 +25,35 @@ namespace regressionevallogic
             return Seperator == other.Seperator &&
                    FilePath == other.FilePath;
         }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals((CSVFile)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            int code = Seperator.GetHashCode() ^ FilePath.GetHashCode();
+            foreach (var header in Headers)
+                code ^= header.GetHashCode();
+            foreach (var element in Elements)
+                foreach (var item in element)
+                    code ^= item.GetHashCode();
+            return code;
+        }
+
+        public override string ToString()
+        {
+            string msg = "Headers: ";
+            foreach (var header in Headers)
+                msg += header + ", ";
+            msg += "| Elements: ";
+            foreach (var element in Elements)
+                foreach (var item in element)
+                    msg += item + ", ";
+            msg += "| Seperator: " + Seperator + "| FilePath: " + FilePath;
+            return msg;
+        }
     }
 
     public struct ParseCommandData : IEquatable<ParseCommandData>
