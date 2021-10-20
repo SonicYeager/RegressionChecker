@@ -41,27 +41,38 @@ namespace regressionevallogic
         {
             var newPath = Path.GetFullPath(path) + "RL_" + _count + ".csv";
             ++_count;
+            CSVFile evaluated = new() { FilePath = newPath, Seperator = ';', Elements = new List<List<string>>(), Headers = new List<string>() { "Frame", "MethodName", "RunTime" } };
 
-            CSVFile evaluated = new() { FilePath = newPath, Seperator = ';', Elements = new List<List<string>>(), Headers = new List<string>() { "Frame", "MethodName", "RunTime" } }; //objektname?
-            //get mittelwert from refData
             var averaged = GetAverageFrameTimes(refData.FrameTimes);
-            //check for lenght -> use smallest
             int smallestIndex = Math.Min(averaged.Elements.Count, latestData.FrameTimes.Elements.Count);
-            //iterate through frametimes + compare frametimes
             for (int i = 0; i < smallestIndex; ++i)
             {
                 //when frametime greater than ref -> Mark the frame index
                 if (Convert.ToDouble(averaged.Elements[i][1], new NumberFormatInfo() { NumberDecimalSeparator = "." }) < Convert.ToDouble(latestData.FrameTimes.Elements[i][1], new NumberFormatInfo() { NumberDecimalSeparator = "." }))
                 {
                     string frame = latestData.FrameTimes.Elements[i][0];
+
+                    //select highest runtime method!!
+                    var methodRuntimeList = latestData.MethodRunTimesPerFrame.Elements.FindAll((line) => line[0] == frame);
+                    double maxRuntTime = 0;
+                    foreach (var entry in methodRuntimeList)
+                    {
+                        double val = Convert.ToDouble(entry[2], new NumberFormatInfo() { NumberDecimalSeparator = "." });
+                        if (val > maxRuntTime)
+                            maxRuntTime = val;
+                    }
+                    var maxRunTimeEntry = latestData.MethodRunTimesPerFrame.Elements.Find(
+                        (line) => Convert.ToDouble(line[2], new NumberFormatInfo() { NumberDecimalSeparator = "." }) == maxRuntTime
+                        );
+
                     evaluated.Elements.Add(new List<string>() {
                         latestData.FrameTimes.Elements[i][0],
-                        latestData.MethodRunTimesPerFrame.Elements.Find((line) => line[0] == frame)[1],
-                        latestData.MethodRunTimesPerFrame.Elements.Find((line) => line[0] == frame)[2],
+                        maxRunTimeEntry[1],
+                        maxRunTimeEntry[2],
                     });
                 }
             }
-            //return this: compile list with frame index and longest runtime method within that frame
+
             return evaluated;
         }
     }
