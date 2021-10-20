@@ -4,6 +4,12 @@ using System.Linq;
 
 namespace regressionevallogic
 {
+
+    public static class GLOBALS
+    {
+        public static readonly char CSV_SEPERATOR = ';';
+    }
+
     public struct CSVFile : IEquatable<CSVFile>
     {
         public List<string> Headers { get; set; }
