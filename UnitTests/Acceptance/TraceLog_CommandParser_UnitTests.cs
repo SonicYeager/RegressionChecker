@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace UnitTests
 {
-    public class TraceLogCommandParser_UnitTests
+    public class TraceLog_CommandParser_UnitTests
     {
         [Fact]
         public void ParseCLIArgs_ArgsWithDestinationAndOneSourceNoFlags_ReturnCSVFileWithOneEntry()

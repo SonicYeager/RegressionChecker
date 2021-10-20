@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace tracelogparserlogic
@@ -13,6 +14,36 @@ namespace tracelogparserlogic
         {
             return Lines.SequenceEqual(other.Lines) &&
                    FilePath == other.FilePath;
+        }
+        public override bool Equals(object obj)
+        {
+            try
+            {
+                return Equals((TraceLogFile)obj);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hashCode = new HashCode();
+
+            hashCode.Add(FilePath.GetHashCode());
+            foreach (var item in Lines)
+                hashCode.Add(item.GetHashCode());
+
+            return hashCode.ToHashCode();
+        }
+
+        public override string ToString()
+        {
+            string res = "FilePath: " + FilePath + " | Lines: ";
+            foreach (var line in Lines)
+                res += line + ", ";
+            return res;
         }
     }
 
@@ -37,6 +68,49 @@ namespace tracelogparserlogic
             return Seperator == other.Seperator &&
                    FilePath == other.FilePath;
         }
+
+        public override bool Equals(object obj)
+        {
+            try
+            { 
+                return Equals((CSVFile)obj);
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hashCode = new HashCode();
+
+            hashCode.Add(FilePath.GetHashCode());
+            hashCode.Add(Seperator.GetHashCode());
+            foreach (var item in Headers)
+                hashCode.Add(item.GetHashCode());
+            foreach(var entry in Elements)
+                foreach (var item in entry)
+                    hashCode.Add(item.GetHashCode());
+
+            return hashCode.ToHashCode();
+        }
+
+        public override string ToString()
+        {
+            string str = "FilePath: " + FilePath + " | Seperator: " + Seperator + " | Headers: ";
+            foreach (var item in Headers)
+                str += item + ", ";
+            str += " | Elements: ";
+            foreach (var entry in Elements)
+            {
+                foreach (var item in entry)
+                    str += item + ", ";
+                str += "; ";
+            }
+
+            return str;
+        }
     }
 
     public struct ParseCommandData : IEquatable<ParseCommandData>
@@ -48,6 +122,38 @@ namespace tracelogparserlogic
         {
             return DestinationPath == other.DestinationPath &&
                    SourceFilePaths.SequenceEqual(other.SourceFilePaths);
+        }
+
+        public override bool Equals(object obj)
+        {
+            try
+            {
+                return Equals((ParseCommandData)obj);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hashCode = new HashCode();
+
+            hashCode.Add(DestinationPath.GetHashCode());
+            foreach (var item in SourceFilePaths)
+                hashCode.Add(item.GetHashCode());
+
+            return hashCode.ToHashCode();
+        }
+
+        public override string ToString()
+        {
+            string str = "DestinationPath: " + DestinationPath + " | SourceFilePaths: ";
+            foreach (var item in SourceFilePaths)
+                str += item + ", ";
+
+            return str;
         }
     }
 

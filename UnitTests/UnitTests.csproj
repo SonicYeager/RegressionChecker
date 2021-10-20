@@ -25,4 +25,9 @@
     <ProjectReference Include="..\TraceLogParserLogic\tracelogparserlogic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\" />
+    <Folder Include="Units\" />
+  </ItemGroup>
+
 </Project>

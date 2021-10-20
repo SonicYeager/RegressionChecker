@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace UnitTests
 {
-    public class RegressionEvalCommandParser_UnitTests
+    public class RegressionEval_CommandParser_UnitTests
     {
 
         [Fact]
