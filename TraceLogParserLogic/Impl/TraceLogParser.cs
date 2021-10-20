@@ -8,6 +8,10 @@ namespace tracelogparserlogic
     {
         public event OnParsed onParsed;
 
+        private delegate void OnStartFrameTime();
+        private delegate void OnStopFrameTime();
+        private delegate void OnMethodTime();
+
         ///{ CONSTANTS 
         ///REGEXGROUPNAME
         private static readonly string GRN_FRAME = "Frame";
@@ -93,7 +97,6 @@ namespace tracelogparserlogic
         {
             return Path.GetFullPath(dstPath) + "\\" + Path.GetFileNameWithoutExtension(Path.GetFullPath(trclFilePath)) + marker + ".csv";
         }
-
         void ExtractRunTime(string line, string frameCount, string name, string dur, ref List<string> runTimeRes, ref List<List<string>> parsedRunTime)
         {
             runTimeRes.Add(frameCount);
@@ -114,6 +117,16 @@ namespace tracelogparserlogic
             frameCount = "";
         }
 
+        void DetermineLine(string line, ref string frameCount, OnStartFrameTime onStartFrameTime, OnStopFrameTime onStopFrameTime, OnMethodTime onMethodTime)
+        {
+            if (IsStartFrameTimeLine(line))
+                onStartFrameTime.Invoke();
+            else if (IsStopMethodTimeLine(line) && !IsStopFrameTimeLine(line) && frameCount != "")
+                onMethodTime.Invoke();
+            else if (IsStopFrameTimeLine(line))
+                onStopFrameTime.Invoke();
+        }
+
         public void ParseTraceLog(TraceLogFile traceLogFile, string dstPath)
         {
             List<List<string>> parsedFrameTime = new();
@@ -127,18 +140,20 @@ namespace tracelogparserlogic
                 List<string> frameTimeRes = new();
                 List<string> runTimeRes = new();
 
-                if (IsStartFrameTimeLine(line))
-                    frameCount = GetFrameCount(line);
-                else if(IsStopMethodTimeLine(line) && !IsStopFrameTimeLine(line) && frameCount != "")
+                OnMethodTime onMethodTime = () =>
                 {
                     var name = GetMethodName(line);
                     var dur = GetDuration(line);
                     ExtractRunTime(line, frameCount, name, dur, ref runTimeRes, ref parsedRunTime);
-                }
-                else if (IsStopFrameTimeLine(line))
-                {
-                    ExtractFrameTime(line, ref frameCount, ref frameTimeRes, ref parsedFrameTime);
-                }
+                };
+
+                DetermineLine(
+                    line, 
+                    ref frameCount, 
+                    () => frameCount = GetFrameCount(line), 
+                    () => ExtractFrameTime(line, ref frameCount, ref frameTimeRes, ref parsedFrameTime),
+                    onMethodTime
+                );
             }
 
             onParsed.Invoke(new CSVFile() { Seperator = ';', FilePath = newFTPath, Headers = new List<string>() { GlobalConstants.FrameHeaderText, GlobalConstants.DurationHeaderText }, Elements = parsedFrameTime }); //frameTime
