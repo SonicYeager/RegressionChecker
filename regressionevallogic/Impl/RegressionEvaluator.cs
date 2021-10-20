@@ -37,6 +37,12 @@ namespace regressionevallogic
             return averagedFrameTimes;
             
         }
+
+        double ConvertToDouble(string str)
+        {
+            return Convert.ToDouble(str, new NumberFormatInfo() { NumberDecimalSeparator = "." });
+        }
+
         public CSVFile EvaluateRegression(ReferenceData refData, LatestData latestData, string path)
         {
             var newPath = Path.GetFullPath(path) + "RL_" + _count + ".csv";
@@ -48,22 +54,22 @@ namespace regressionevallogic
             for (int i = 0; i < smallestIndex; ++i)
             {
                 //when frametime greater than ref -> Mark the frame index
-                if (Convert.ToDouble(averaged.Elements[i][1], new NumberFormatInfo() { NumberDecimalSeparator = "." }) < Convert.ToDouble(latestData.FrameTimes.Elements[i][1], new NumberFormatInfo() { NumberDecimalSeparator = "." }))
+                if (ConvertToDouble(averaged.Elements[i][1]) < ConvertToDouble(latestData.FrameTimes.Elements[i][1]))
                 {
                     string frame = latestData.FrameTimes.Elements[i][0];
+                    Predicate<List<string>> matchesGivenFrame = (line) => line[0] == frame;
 
                     //select highest runtime method!!
-                    var methodRuntimeList = latestData.MethodRunTimesPerFrame.Elements.FindAll((line) => line[0] == frame);
+                    var methodRuntimeList = latestData.MethodRunTimesPerFrame.Elements.FindAll(matchesGivenFrame);
                     double maxRuntTime = 0;
+                    Predicate<List<string>> matchesGivenRunTime = (line) => ConvertToDouble(line[2]) == maxRuntTime;
                     foreach (var entry in methodRuntimeList)
                     {
-                        double val = Convert.ToDouble(entry[2], new NumberFormatInfo() { NumberDecimalSeparator = "." });
+                        double val = ConvertToDouble(entry[2]);
                         if (val > maxRuntTime)
                             maxRuntTime = val;
                     }
-                    var maxRunTimeEntry = latestData.MethodRunTimesPerFrame.Elements.Find(
-                        (line) => Convert.ToDouble(line[2], new NumberFormatInfo() { NumberDecimalSeparator = "." }) == maxRuntTime
-                        );
+                    var maxRunTimeEntry = latestData.MethodRunTimesPerFrame.Elements.Find(matchesGivenRunTime);
 
                     evaluated.Elements.Add(new List<string>() {
                         latestData.FrameTimes.Elements[i][0],
