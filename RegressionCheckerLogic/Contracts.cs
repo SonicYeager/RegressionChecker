@@ -9,6 +9,7 @@ namespace RegressionCheckerLogic
     public delegate void OnSingleFilePathSelection(string path);
     public delegate void OnReadLineChartSeriesData(LineChartSeriesData data);
     public delegate void OnReadPieChartSeriesData(PieChartSeriesData data);
+    public delegate void OnOpenAddFilePathDialog();
 
     public interface IMainUI : INotifyPropertyChanged
     {
@@ -22,10 +23,16 @@ namespace RegressionCheckerLogic
         public void Run(List<string> args);
     }
 
+    public interface IAddFilePathDialog
+    {
+    }
+
     public interface ISingleSelectFileOverviewUI
     {
-        public event OnAdditionalFilePath onAdditionalFilePath;
+        public void AddFilePath(string path);
+
         public event OnSingleFilePathSelection onSingleFilePathSelection;
+        public event OnOpenAddFilePathDialog onOpenFilePathSelection;
     }
 
     public interface ISingleSelectFileOverviewController

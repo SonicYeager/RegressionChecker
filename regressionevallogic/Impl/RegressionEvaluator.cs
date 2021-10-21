@@ -10,23 +10,31 @@ namespace regressionevallogic
 {
     public class RegressionEvaluator : IRegressionEvaluator
     {
-        int _count = 0;
+        private int _count = 0;
+        private delegate void Action(int i);
 
-        double ConvertToDouble(string str)
+        private double ConvertToDouble(string str)
         {
             return Convert.ToDouble(str, new NumberFormatInfo() { NumberDecimalSeparator = "." });
         }
 
-        public CSVFile GetAverageFrameTimes(List<CSVFile> frameTimes)
+        private void IterateTill(int index, Action action)
         {
-            CSVFile averagedFrameTimes = new() { FilePath = "", Seperator = '\0', Elements=new List<List<string>>(), Headers=frameTimes[0].Headers };
-            //check for lenght -> use smallest
+            for (int i = 0; i < index; ++i)
+                action.Invoke(i);
+        }
+
+        private static int GetSmallesIndex(List<CSVFile> frameTimes)
+        {
             int smallestIndex = int.MaxValue;
             foreach (var frameTime in frameTimes)
                 if (frameTime.Elements.Count < smallestIndex)
                     smallestIndex = frameTime.Elements.Count;
+            return smallestIndex;
+        }
 
-            //iterate through frametimes and get average
+        private List<double> GetAveragedFrameTimes(List<CSVFile> frameTimes, int smallestIndex)
+        {
             List<double> averaged = new List<double>();
             for (int i = 0; i < smallestIndex; ++i)
             {
@@ -35,12 +43,60 @@ namespace regressionevallogic
                     sum += ConvertToDouble(frameTime.Elements[i][1]);
                 averaged.Add((sum / (double)frameTimes.Count));
             }
+            return averaged;
+        }
 
-            for (int i = 0; i < smallestIndex; ++i)
-                averagedFrameTimes.Elements.Add(new List<string>() { frameTimes[0].Elements[i][0], string.Format("{0:N4}",Convert.ToString(averaged[i], new NumberFormatInfo() { NumberDecimalSeparator = "." }))});
+        private static List<string> CreateAveragedEntry(List<CSVFile> frameTimes, List<double> averaged, int i)
+        {
+            return new List<string>() { frameTimes[0].Elements[i][0], string.Format("{0:N4}", Convert.ToString(averaged[i], new NumberFormatInfo() { NumberDecimalSeparator = "." })) };
+        }
 
-            return averagedFrameTimes;
+        public CSVFile GetAverageFrameTimes(List<CSVFile> frameTimes) //should be public part of the interface and externally called
+        {
+            CSVFile averagedFrameTimes = new() { FilePath = "", Seperator = '\0', Elements = new List<List<string>>(), Headers = frameTimes[0].Headers };
+            int smallestIndex = GetSmallesIndex(frameTimes);
+            List<double> averaged = GetAveragedFrameTimes(frameTimes, smallestIndex);
+            IterateTill(smallestIndex, (int i) => averagedFrameTimes.Elements.Add(CreateAveragedEntry(frameTimes, averaged, i)));
             
+            return averagedFrameTimes;
+
+        }
+
+        private List<string> SelectMaxRunTime(LatestData latestData, Predicate<List<string>> matchesGivenFrame)
+        {
+
+            //select highest runtime method!!
+            var methodRuntimeList = latestData.MethodRunTimesPerFrame.Elements.FindAll(matchesGivenFrame);
+            double maxRuntTime = 0;
+            Predicate<List<string>> matchesGivenRunTime = (line) => ConvertToDouble(line[2]) == maxRuntTime;
+            foreach (var entry in methodRuntimeList)
+            {
+                double val = ConvertToDouble(entry[2]);
+                if (val > maxRuntTime)
+                    maxRuntTime = val;
+            }
+            var maxRunTimeEntry = latestData.MethodRunTimesPerFrame.Elements.Find(matchesGivenRunTime);
+            return maxRunTimeEntry;
+        }
+
+        private bool FrameTimeGreaterThanReferenceFrameTime(LatestData latestData, CSVFile averaged, int i)
+        {
+            return ConvertToDouble(averaged.Elements[i][1]) < ConvertToDouble(latestData.FrameTimes.Elements[i][1]);
+        }
+
+        private void AddRegressiveEntry(LatestData latestData, CSVFile evaluated, CSVFile averaged, int i)
+        {
+            if (FrameTimeGreaterThanReferenceFrameTime(latestData, averaged, i))
+            {
+                string frame = latestData.FrameTimes.Elements[i][0];
+                Predicate<List<string>> matchesGivenFrame = (line) => line[0] == frame;
+                List<string> maxRunTimeEntry = SelectMaxRunTime(latestData, matchesGivenFrame);
+                evaluated.Elements.Add(new List<string>() {
+                        latestData.FrameTimes.Elements[i][0],
+                        maxRunTimeEntry[1],
+                        maxRunTimeEntry[2],
+                    });
+            }
         }
 
         public CSVFile EvaluateRegression(ReferenceData refData, LatestData latestData, string path)
@@ -51,33 +107,7 @@ namespace regressionevallogic
 
             var averaged = GetAverageFrameTimes(refData.FrameTimes);
             int smallestIndex = Math.Min(averaged.Elements.Count, latestData.FrameTimes.Elements.Count);
-            for (int i = 0; i < smallestIndex; ++i)
-            {
-                //when frametime greater than ref -> Mark the frame index
-                if (ConvertToDouble(averaged.Elements[i][1]) < ConvertToDouble(latestData.FrameTimes.Elements[i][1]))
-                {
-                    string frame = latestData.FrameTimes.Elements[i][0];
-                    Predicate<List<string>> matchesGivenFrame = (line) => line[0] == frame;
-
-                    //select highest runtime method!!
-                    var methodRuntimeList = latestData.MethodRunTimesPerFrame.Elements.FindAll(matchesGivenFrame);
-                    double maxRuntTime = 0;
-                    Predicate<List<string>> matchesGivenRunTime = (line) => ConvertToDouble(line[2]) == maxRuntTime;
-                    foreach (var entry in methodRuntimeList)
-                    {
-                        double val = ConvertToDouble(entry[2]);
-                        if (val > maxRuntTime)
-                            maxRuntTime = val;
-                    }
-                    var maxRunTimeEntry = latestData.MethodRunTimesPerFrame.Elements.Find(matchesGivenRunTime);
-
-                    evaluated.Elements.Add(new List<string>() {
-                        latestData.FrameTimes.Elements[i][0],
-                        maxRunTimeEntry[1],
-                        maxRunTimeEntry[2],
-                    });
-                }
-            }
+            IterateTill(smallestIndex, (int i) => AddRegressiveEntry(latestData, evaluated, averaged, i));
 
             return evaluated;
         }

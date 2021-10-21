@@ -34,31 +34,45 @@ namespace regressionevallogic
 
         public override bool Equals(object obj)
         {
-            return this.Equals((CSVFile)obj);
+            try
+            {
+                return Equals((CSVFile)obj);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public override int GetHashCode()
         {
-            int code = Seperator.GetHashCode() ^ FilePath.GetHashCode();
-            foreach (var header in Headers)
-                code ^= header.GetHashCode();
-            foreach (var element in Elements)
-                foreach (var item in element)
-                    code ^= item.GetHashCode();
-            return code;
+            HashCode hashCode = new HashCode();
+
+            hashCode.Add(FilePath.GetHashCode());
+            hashCode.Add(Seperator.GetHashCode());
+            foreach (var item in Headers)
+                hashCode.Add(item.GetHashCode());
+            foreach (var entry in Elements)
+                foreach (var item in entry)
+                    hashCode.Add(item.GetHashCode());
+
+            return hashCode.ToHashCode();
         }
 
         public override string ToString()
         {
-            string msg = "Headers: ";
-            foreach (var header in Headers)
-                msg += header + ", ";
-            msg += "| Elements: ";
-            foreach (var element in Elements)
-                foreach (var item in element)
-                    msg += item + ", ";
-            msg += "| Seperator: " + Seperator + "| FilePath: " + FilePath;
-            return msg;
+            string str = "FilePath: " + FilePath + " | Seperator: " + Seperator + " | Headers: ";
+            foreach (var item in Headers)
+                str += item + ", ";
+            str += " | Elements: ";
+            foreach (var entry in Elements)
+            {
+                foreach (var item in entry)
+                    str += item + ", ";
+                str += "; ";
+            }
+
+            return str;
         }
     }
 
@@ -74,6 +88,39 @@ namespace regressionevallogic
                    ReferenceFilePaths.SequenceEqual(other.ReferenceFilePaths) &&
                    Equals(LatestFilePaths, other.LatestFilePaths);
         }
+
+        public override bool Equals(object obj)
+        {
+            try
+            {
+                return Equals((ParseCommandData)obj);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hashCode = new HashCode();
+
+            hashCode.Add(DestinationPath.GetHashCode());
+            hashCode.Add(LatestFilePaths.GetHashCode());
+            foreach (var item in ReferenceFilePaths)
+                hashCode.Add(item.GetHashCode());
+
+            return hashCode.ToHashCode();
+        }
+
+        public override string ToString()
+        {
+            string str = "DestinationPath: " + DestinationPath + " | LatestFilePaths: " + LatestFilePaths.ToString() + " | ReferenceFilePaths: ";
+            foreach (var item in ReferenceFilePaths)
+                str += item.ToString() + ", ";
+
+            return str;
+        }
     }
 
     public struct ReferenceData : IEquatable<ReferenceData>
@@ -83,6 +130,37 @@ namespace regressionevallogic
         public bool Equals(ReferenceData other)
         {
             return FrameTimes.SequenceEqual(other.FrameTimes);
+        }
+
+        public override bool Equals(object obj)
+        {
+            try
+            {
+                return Equals((LatestData)obj);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hashCode = new HashCode();
+
+            foreach (var item in FrameTimes)
+                hashCode.Add(item.GetHashCode());
+
+            return hashCode.ToHashCode();
+        }
+
+        public override string ToString()
+        {
+            string str = "FrameTimes: ";
+            foreach (var item in FrameTimes)
+                str += item.ToString();
+
+            return str;
         }
     }
 
@@ -96,6 +174,35 @@ namespace regressionevallogic
             return Equals(FrameTimes, other.FrameTimes) &&
                 Equals(MethodRunTimesPerFrame, other.MethodRunTimesPerFrame);
         }
+
+        public override bool Equals(object obj)
+        {
+            try
+            {
+                return Equals((LatestData)obj);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hashCode = new HashCode();
+
+            hashCode.Add(FrameTimes.GetHashCode());
+            hashCode.Add(MethodRunTimesPerFrame.GetHashCode());
+
+            return hashCode.ToHashCode();
+        }
+
+        public override string ToString()
+        {
+            string str = "FrameTimes: " + FrameTimes.ToString() + " | MethodRunTimesPerFrame: " + MethodRunTimesPerFrame.ToString();
+
+            return str;
+        }
     }
 
     public struct ToDataFilePaths : IEquatable<ToDataFilePaths>
@@ -107,6 +214,35 @@ namespace regressionevallogic
         {
             return Equals(FrameTimes, other.FrameTimes) &&
                 Equals(MethodRunTimesPerFrame, other.MethodRunTimesPerFrame);
+        }
+
+        public override bool Equals(object obj)
+        {
+            try
+            {
+                return Equals((ToDataFilePaths)obj);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hashCode = new HashCode();
+
+            hashCode.Add(FrameTimes.GetHashCode());
+            hashCode.Add(MethodRunTimesPerFrame.GetHashCode());
+
+            return hashCode.ToHashCode();
+        }
+
+        public override string ToString()
+        {
+            string str = "FrameTimes: " + FrameTimes + " | MethodRunTimesPerFrame: " + MethodRunTimesPerFrame;
+
+            return str;
         }
     }
 }
