@@ -12,6 +12,11 @@ namespace regressionevallogic
     {
         int _count = 0;
 
+        double ConvertToDouble(string str)
+        {
+            return Convert.ToDouble(str, new NumberFormatInfo() { NumberDecimalSeparator = "." });
+        }
+
         public CSVFile GetAverageFrameTimes(List<CSVFile> frameTimes)
         {
             CSVFile averagedFrameTimes = new() { FilePath = "", Seperator = '\0', Elements=new List<List<string>>(), Headers=frameTimes[0].Headers };
@@ -27,7 +32,7 @@ namespace regressionevallogic
             {
                 double sum = 0;
                 foreach (var frameTime in frameTimes)
-                    sum += Convert.ToDouble(frameTime.Elements[i][1], new NumberFormatInfo() { NumberDecimalSeparator = "." });
+                    sum += ConvertToDouble(frameTime.Elements[i][1]);
                 averaged.Add((sum / (double)frameTimes.Count));
             }
 
@@ -36,11 +41,6 @@ namespace regressionevallogic
 
             return averagedFrameTimes;
             
-        }
-
-        double ConvertToDouble(string str)
-        {
-            return Convert.ToDouble(str, new NumberFormatInfo() { NumberDecimalSeparator = "." });
         }
 
         public CSVFile EvaluateRegression(ReferenceData refData, LatestData latestData, string path)
