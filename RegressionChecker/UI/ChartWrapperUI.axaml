@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             x:Class="RegressionChecker.ChartWrapperUI">
+  <TabControl Name="ChartWrapper"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 DockPanel.Dock="Left"
+                 Margin="10,0,0,0"
+                 MinWidth="200"
+                 MinHeight="200">
+    <TabItem Header="Line-Chart">
+      <Viewbox Stretch="Uniform"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch">
+        <lvc:CartesianChart Name="LineChart"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Width="500"
+                            Height="500"
+                            ZoomMode="X"
+                            XAxes="{Binding LineChartXAxis}"
+                            YAxes="{Binding LineChartYAxis}"
+                            LegendPosition="Bottom">
+        </lvc:CartesianChart>
+      </Viewbox>
+    </TabItem>
+    <TabItem Header="Pie-Chart">
+      <Viewbox Stretch="Uniform"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch">
+        <lvc:PieChart Name="PieChart"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Width="500"
+                      Height="500"
+                      LegendPosition="Bottom">
+        </lvc:PieChart>
+      </Viewbox>
+    </TabItem>
+  </TabControl>
+</UserControl>

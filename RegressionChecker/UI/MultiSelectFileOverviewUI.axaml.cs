@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using Avalonia.Markup.Xaml;
 using RegressionCheckerLogic;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -12,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace RegressionChecker
 {
-    public class SingleSelectFileOverviewUI : UserControl, ISingleSelectFileOverviewUI, INotifyPropertyChanged
+    public class MultiSelectFileOverviewUI : UserControl, IMultiSelectFileOverviewUI, INotifyPropertyChanged
     {
-        public event OnSingleFilePathSelection? onSingleFilePathSelection;
+        public event OnMultiFilePathSelection? onMultiFilePathSelection;
         public event OnOpenAddFilePathDialog? onOpenFilePathSelection;
 
         new public event PropertyChangedEventHandler? PropertyChanged;
@@ -25,29 +24,39 @@ namespace RegressionChecker
             get => paths;
             set => this.RaiseAndSetIfChanged(ref paths, value);
         }
-        PathViewModel selectedPath;
-        public PathViewModel SelectedPath
-        {
-            get => selectedPath;
-            set => this.RaiseAndSetIfChanged(ref selectedPath, value);
-        }
+        public SelectionModel<PathViewModel> SelectedPaths { get; set; } = new() { SingleSelect = false };
 
-        public SingleSelectFileOverviewUI()
+        public MultiSelectFileOverviewUI()
         {
             AvaloniaXamlLoader.Load(this);
 
             PropertyChanged += PropertyChangedHandler;
+            SelectedPaths.SelectionChanged += SelectedPathsChangedHandler;
+        }
+
+        private void SelectedPathsChangedHandler(object? sender, SelectionModelSelectionChangedEventArgs<PathViewModel> e)
+        {
+            List<string> selection = new();
+            foreach (var item in e.SelectedItems)
+                selection.Add(item.Path);
+            foreach (var item in e.DeselectedItems)
+                selection.Remove(item.Path);
+            onMultiFilePathSelection.Invoke(selection);
         }
 
         private void PropertyChangedHandler(object? sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "SelectedPath")
-                onSingleFilePathSelection?.Invoke(SelectedPath.Path);
+            //TODO
         }
 
         public async Task SelectLatFileCommand()
         {
-            onOpenFilePathSelection?.Invoke();
+            onOpenFilePathSelection.Invoke();
+        }
+
+        public void AddFilePath(string path)
+        {
+            Paths.Add(new PathViewModel() { Path = path });
         }
 
         protected bool RaiseAndSetIfChanged<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
@@ -63,10 +72,5 @@ namespace RegressionChecker
 
         protected void RaisePropertyChanged([CallerMemberName] string? propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-        public void AddFilePath(string path)
-        {
-            Paths.Add(new PathViewModel(){Path=path});
-        }
     }
 }

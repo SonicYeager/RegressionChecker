@@ -1,21 +1,17 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Selection;
 using Avalonia.Markup.Xaml;
 using RegressionCheckerLogic;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 
 namespace RegressionChecker
 {
-    public class SingleSelectFileOverviewUI : UserControl, ISingleSelectFileOverviewUI, INotifyPropertyChanged
+    public class SingleSelectionOverviewAutomaticAddUI : UserControl, ISingleSelectionOverviewAutomaticAddUI, INotifyPropertyChanged
     {
         public event OnSingleFilePathSelection? onSingleFilePathSelection;
-        public event OnOpenAddFilePathDialog? onOpenFilePathSelection;
 
         new public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -32,7 +28,7 @@ namespace RegressionChecker
             set => this.RaiseAndSetIfChanged(ref selectedPath, value);
         }
 
-        public SingleSelectFileOverviewUI()
+        public SingleSelectionOverviewAutomaticAddUI()
         {
             AvaloniaXamlLoader.Load(this);
 
@@ -41,13 +37,13 @@ namespace RegressionChecker
 
         private void PropertyChangedHandler(object? sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "SelectedPath")
+            if (e.PropertyName == "SelectedPath")
                 onSingleFilePathSelection?.Invoke(SelectedPath.Path);
         }
 
-        public async Task SelectLatFileCommand()
+        public void AddFilePath(string path)
         {
-            onOpenFilePathSelection?.Invoke();
+            Paths.Add(new PathViewModel() { Path = path });
         }
 
         protected bool RaiseAndSetIfChanged<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
@@ -63,10 +59,5 @@ namespace RegressionChecker
 
         protected void RaisePropertyChanged([CallerMemberName] string? propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-        public void AddFilePath(string path)
-        {
-            Paths.Add(new PathViewModel(){Path=path});
-        }
     }
 }

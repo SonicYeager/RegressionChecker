@@ -44,10 +44,28 @@ namespace RegressionCheckerLogic
         public event OnReadPieChartSeriesData onReadPieChartSeriesData;
     }
 
+    public interface ISingleSelectionOverviewAutomaticAddUI
+    {
+        public void AddFilePath(string path);
+
+        public event OnSingleFilePathSelection onSingleFilePathSelection;
+    }
+
+    public interface ISingleSelectionOverviewAutomaticAddController
+    {
+        public LineChartSeriesData GetLineChartSeriesDataFromFile(string path);
+        public PieChartSeriesData GetPieChartSeriesDataFromFile(string path);
+
+        public event OnReadLineChartSeriesData onReadLineChartSeriesData;
+        public event OnReadPieChartSeriesData onReadPieChartSeriesData;
+    }
+
     public interface IMultiSelectFileOverviewUI
     {
-        public event OnAdditionalFilePath onAdditionalFilePath;
+        public void AddFilePath(string path);
+
         public event OnMultiFilePathSelection onMultiFilePathSelection;
+        public event OnOpenAddFilePathDialog onOpenFilePathSelection;
     }
 
     public interface IMultiSelectFileOverviewController
@@ -57,6 +75,17 @@ namespace RegressionCheckerLogic
 
         public event OnReadLineChartSeriesData onReadLineChartSeriesData;
         public event OnReadPieChartSeriesData onReadPieChartSeriesData;
+    }
+
+    public interface IChartWrapperUI
+    {
+        public void SetLineChartSeries(LineChartSeriesData seriesData);
+        public void SetPieChartSeries(PieChartSeriesData seriesData);
+    }
+
+    public interface IChartWrapperController
+    {
+        //TODO
     }
 
     public interface ICommandParser
