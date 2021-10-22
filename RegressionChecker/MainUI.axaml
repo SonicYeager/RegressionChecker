@@ -1,17 +1,50 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:uc="clr-namespace:Prototype"
+        xmlns:uc="clr-namespace:RegressionChecker"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
-        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
         x:Class="RegressionChecker.MainUI"
-        Title="Prototype"
+        Title="RegressionChecker"
         ExtendClientAreaToDecorationsHint="True"
         Name="Window"
         MinWidth="890"
         MinHeight="600"
         Width="890"
         Height="600">
-    Welcome to Avalonia!
+  
+  <DockPanel Name="ContentWrapper"
+           LastChildFill="True"
+           HorizontalAlignment="Stretch"
+           VerticalAlignment="Stretch"
+           Margin="10,0,10,10">
+
+    <DockPanel Name="Control"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Center"
+               Height="30"
+               DockPanel.Dock="Top">
+      <TextBlock Text="Regression Checker"
+                 Name="Title"
+                 VerticalAlignment="Center">
+      </TextBlock>
+    </DockPanel>
+
+    <ScrollViewer AllowAutoHide="True"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch">
+      <StackPanel Name="DataSetLists"
+                  Spacing="10"
+                  MinWidth="200"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  DockPanel.Dock="Left">
+        <uc:SingleSelectFileOverviewUI/>
+        <uc:MultiSelectFileOverviewUI/>
+        <uc:SingleSelectionOverviewAutomaticAddUI/>
+      </StackPanel>
+    </ScrollViewer>
+
+    <uc:ChartWrapperUI/>
+
+  </DockPanel>
 </Window>

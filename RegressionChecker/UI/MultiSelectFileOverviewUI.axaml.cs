@@ -32,6 +32,8 @@ namespace RegressionChecker
 
             PropertyChanged += PropertyChangedHandler;
             SelectedPaths.SelectionChanged += SelectedPathsChangedHandler;
+
+            DataContext = this;
         }
 
         private void SelectedPathsChangedHandler(object? sender, SelectionModelSelectionChangedEventArgs<PathViewModel> e)
@@ -49,7 +51,7 @@ namespace RegressionChecker
             //TODO
         }
 
-        public async Task SelectLatFileCommand()
+        public async Task SelectRefFileCommand()
         {
             onOpenFilePathSelection.Invoke();
         }

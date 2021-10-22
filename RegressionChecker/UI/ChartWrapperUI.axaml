@@ -5,8 +5,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             x:Class="RegressionChecker.ChartWrapperUI">
-  <TabControl Name="ChartWrapper"
+             x:Class="RegressionChecker.ChartWrapperUI"
+             Name="ChartWrapper">
+  <TabControl Name="ChartTabControl"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
                  DockPanel.Dock="Left"
@@ -25,7 +26,8 @@
                             ZoomMode="X"
                             XAxes="{Binding LineChartXAxis}"
                             YAxes="{Binding LineChartYAxis}"
-                            LegendPosition="Bottom">
+                            LegendPosition="Bottom"
+                            Series="{Binding LineSeries}">
         </lvc:CartesianChart>
       </Viewbox>
     </TabItem>
@@ -38,7 +40,8 @@
                       VerticalAlignment="Stretch"
                       Width="500"
                       Height="500"
-                      LegendPosition="Bottom">
+                      LegendPosition="Bottom"
+                      Series="{Binding PieSeries}">
         </lvc:PieChart>
       </Viewbox>
     </TabItem>

@@ -19,6 +19,7 @@ namespace RegressionChecker
         {
             AvaloniaXamlLoader.Load(this);
             PathField = this.FindControl<TextBox>("PathField");
+            DataContext = this;
         }
 
         public void OKCommand(object sender, RoutedEventArgs e)

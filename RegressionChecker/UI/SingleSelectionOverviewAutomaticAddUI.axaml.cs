@@ -33,6 +33,8 @@ namespace RegressionChecker
             AvaloniaXamlLoader.Load(this);
 
             PropertyChanged += PropertyChangedHandler;
+
+            DataContext = this;
         }
 
         private void PropertyChangedHandler(object? sender, PropertyChangedEventArgs e)

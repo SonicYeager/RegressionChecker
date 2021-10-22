@@ -17,7 +17,7 @@ namespace RegressionCheckerLogic
     public struct PieChartDataEntry
     {
         public string EntryName { get; set; }
-        public int EntryValue { get; set; }
+        public double EntryValue { get; set; }
     }
 
     public struct PieChartSeriesData
