@@ -91,6 +91,8 @@ namespace RegressionCheckerLogic
     public interface ICommandParser
     {
         public ParseCommandData ParseCommandArgs(List<string> args);
+        //public List<string> ParseCommandData(RegressionEvaluationCommandData data);
+        //public List<string> ParseCommandData(TraceLogParseCommandData data);
     }
 
     public interface IDataConverter

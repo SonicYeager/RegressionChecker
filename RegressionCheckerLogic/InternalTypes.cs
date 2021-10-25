@@ -5,6 +5,11 @@ using System.Linq;
 
 namespace RegressionCheckerLogic
 {
+    public static class GLOBALS
+    {
+        public static readonly char CSV_SEPERATOR = ';';
+    }
+
     public struct PathViewModel : IEquatable<PathViewModel>
     {
         public string Path { get; set; }
@@ -271,7 +276,7 @@ namespace RegressionCheckerLogic
     {
         public List<string> Headers { get; set; }
         public List<List<string>> Elements { get; set; }
-        public string Seperator { get; set; }
+        public char Seperator { get; set; }
         public string FilePath { get; set; }
 
         public bool Equals(CSVFile other)
