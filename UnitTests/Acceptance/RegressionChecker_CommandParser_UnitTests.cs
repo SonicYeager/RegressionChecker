@@ -9,55 +9,87 @@ namespace UnitTests
     {
 
         [Fact]
-        public void ParseCLIArgs_FullArgsWithOnlyFrameTimes_ReturnFullCommandData()
+        public void ParseCLIArgs_ArgsWithDestinationAndOneSourceNoFlags_ReturnCommandDataWithOneEntry()
         {
             CommandParser parser = new();
             List<string> args = new()
-            {
-                "regressioneval.exe",
-                "D:\\",
-                "-r",
-                "D:\\TestLog_FT.csv",
-                "-l",
-                "D:\\TestLog001_FT.csv",
+            { 
+                "tracelogparser.exe", 
+                "D:\\", 
+                "D:\\video_pro_x_662_original.log"
             };
-            ParseCommandData expected = new()
-            {
+            ParseCommandData expected = new() 
+            { 
                 DestinationPath = "D:\\",
-                ReferenceFilePaths = new()
+                SourceFilePaths = new List<string>() 
                 {
-                    new ToDataFilePaths()
-                    {
-                        FrameTimes = "D:\\TestLog_FT.csv",
-                        MethodRunTimesPerFrame = ""
-                    },
+                    "D:\\video_pro_x_662_original.log" 
                 },
-                LatestFilePaths = new ToDataFilePaths()
-                {
-                    FrameTimes = "D:\\TestLog001_FT.csv",
-                    MethodRunTimesPerFrame = "",
-                },
+                NoGUI = false,
             };
 
-            var actual = parser.ParseCLIArgs(args);
+            var actual = parser.ParseCommandArgs(args);
 
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void ParseCLIArgs_IncorrectArgsNoFlags_InvokeOnOutputEventWithErrMsg()
+        public void ParseCLIArgs_ArgsWithDestinationAndMultipleSourceNoFlags_ReturnCommandDataWithMultipleEntry()
         {
             CommandParser parser = new();
             List<string> args = new()
             {
-                "regressioneval.exe"
+                "tracelogparser.exe",
+                "D:\\",
+                "D:\\video_pro_x_662_original.log",
+                "D:\\video_pro_x_663_original.log",
+                "D:\\video_pro_x_664_original.log"
             };
-            string errMsg = "";
-            parser.onOutput += (string msg) => { errMsg = msg; };
+            ParseCommandData expected = new()
+            {
+                DestinationPath = "D:\\",
+                SourceFilePaths = new List<string>()
+                {
+                    "D:\\video_pro_x_662_original.log",
+                    "D:\\video_pro_x_663_original.log",
+                    "D:\\video_pro_x_664_original.log"
+                },
+                NoGUI = false,
+            };
 
-            var actual = parser.ParseCLIArgs(args);
+            var actual = parser.ParseCommandArgs(args);
 
-            Assert.Equal("Wrong Input!", errMsg);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void ParseCLIArgs_ArgsWitNoGUIFlag_ReturnCommandDataWithFlag()
+        {
+            CommandParser parser = new();
+            List<string> args = new()
+            {
+                "tracelogparser.exe",
+                "--nogui",
+                "D:\\",
+                "D:\\video_pro_x_662_original.log",
+                "D:\\video_pro_x_663_original.log",
+                "D:\\video_pro_x_664_original.log"
+            };
+            ParseCommandData expected = new()
+            {
+                DestinationPath = "D:\\",
+                SourceFilePaths = new List<string>()
+                {
+                    "D:\\video_pro_x_662_original.log",
+                    "D:\\video_pro_x_663_original.log",
+                    "D:\\video_pro_x_664_original.log"
+                },
+                NoGUI = true,
+            };
+
+            var actual = parser.ParseCommandArgs(args);
+
+            Assert.Equal(expected, actual);
         }
     }
 }

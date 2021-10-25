@@ -10,7 +10,24 @@ namespace RegressionCheckerLogic
     {
         public ParseCommandData ParseCommandArgs(List<string> args)
         {
-            throw new NotImplementedException();
+            if (args.Count <= 1)
+                return new ParseCommandData();
+            string noguiarg = args.Find((string item) => item.StartsWith("-"));
+            var parsed = new ParseCommandData() { DestinationPath = "", SourceFilePaths = new List<string>(), NoGUI = false };
+            if (noguiarg != null)
+            {
+                parsed.NoGUI = true;
+                parsed.DestinationPath = args[2];
+                for (int i = 3; i < args.Count; ++i)
+                    parsed.SourceFilePaths.Add(args[i]);
+            }
+            else
+            {
+                parsed.DestinationPath = args[1];
+                for (int i = 2; i < args.Count; ++i)
+                    parsed.SourceFilePaths.Add(args[i]);
+            }
+            return parsed;
         }
     }
 }
