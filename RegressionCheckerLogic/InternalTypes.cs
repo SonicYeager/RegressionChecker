@@ -51,7 +51,7 @@ namespace RegressionCheckerLogic
     public struct LineChartSeriesData : IEquatable<LineChartSeriesData>
     {
         public string Name { get; set; }
-        public List<TimeSpan> Values { get; set; }
+        public List<double> Values { get; set; }
 
         public bool Equals(LineChartSeriesData other)
         {
@@ -181,7 +181,7 @@ namespace RegressionCheckerLogic
     {
         public string MethodName { get; set; }
         public int FrameNumber { get; set; }
-        public TimeSpan Runtime { get; set; }
+        public double Runtime { get; set; }
 
         public bool Equals(RegressiveMethodEntry other)
         {

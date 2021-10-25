@@ -51,7 +51,7 @@ namespace RegressionChecker
             var existingSeries = LineSeries.FirstOrDefault((LineSeries<double> series) => series.Name == seriesData.Name);
             var values = new List<double>();
             foreach (var item in seriesData.Values)
-                values.Add(item.TotalMilliseconds);
+                values.Add(item);
             if(existingSeries != null && existingSeries.Name != "")
             {
                 existingSeries = new LineSeries<double>()

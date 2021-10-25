@@ -97,8 +97,8 @@ namespace RegressionCheckerLogic
 
     public interface IDataConverter
     {
-        public LineChartSeriesData ConvertCSVFileToLineChartSeriesData(CSVFile file);
-        public PieChartSeriesData ConvertCSVFileToPieChartSeriesData(CSVFile file);
+        public LineChartSeriesData ConvertCSVFileToLineChartSeriesData(CSVFile file, string name);
+        public PieChartSeriesData ConvertCSVFileToPieChartSeriesData(CSVFile file, int framenumber);
     }
 
     public interface ICSVFileReader
