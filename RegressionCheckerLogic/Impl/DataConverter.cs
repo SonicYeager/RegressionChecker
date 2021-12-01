@@ -26,9 +26,17 @@ namespace RegressionCheckerLogic
             return lineChartSeriesData;
         }
 
-        public PieChartSeriesData ConvertCSVFileToPieChartSeriesData(CSVFile file, int framenumber)
+        public PieChartSeriesData ConvertCSVFileToPieChartSeriesData(CSVFile file, string framenumber)
         {
-            throw new NotImplementedException();
+            PieChartSeriesData pieChartSeriesData = new PieChartSeriesData() { Name = framenumber };
+
+            List<PieChartDataEntry> values = new();
+            foreach (var val in file.Elements)
+                if(val[0] == framenumber)
+                    values.Add(new PieChartDataEntry() { EntryName = val[1], EntryValue = ConvertToDouble(val[2]) });
+            pieChartSeriesData.Values = values;
+
+            return pieChartSeriesData;
         }
     }
 }

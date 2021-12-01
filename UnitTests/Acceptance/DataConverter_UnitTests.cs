@@ -165,7 +165,7 @@ namespace UnitTests
             };
             PieChartSeriesData expected = new PieChartSeriesData()
             {
-                Name = "Reference",
+                Name = "00:00:00",
                 Values = new List<PieChartDataEntry>()
                 {
                     new PieChartDataEntry() { EntryName = "GetVideoFrame", EntryValue = 13.4780 },
@@ -173,7 +173,7 @@ namespace UnitTests
                 }
             };
 
-            var actual = converter.ConvertCSVFileToPieChartSeriesData(input, 0);
+            var actual = converter.ConvertCSVFileToPieChartSeriesData(input, "00:00:00");
 
             Assert.Equal(expected, actual);
         }
