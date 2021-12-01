@@ -43,17 +43,17 @@ namespace RegressionChecker
                 selection.Add(item.Path);
             foreach (var item in e.DeselectedItems)
                 selection.Remove(item.Path);
-            onMultiFilePathSelection.Invoke(selection);
+            onMultiFilePathSelection?.Invoke(selection);
         }
 
         private void PropertyChangedHandler(object? sender, PropertyChangedEventArgs e)
         {
-            //TODO
+            //OPEN TODO
         }
 
         public async Task SelectRefFileCommand()
         {
-            onOpenFilePathSelection.Invoke();
+            onOpenFilePathSelection?.Invoke();
         }
 
         public void AddFilePath(string path)

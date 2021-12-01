@@ -25,7 +25,10 @@ namespace RegressionChecker
         public void OKCommand(object sender, RoutedEventArgs e)
         {
             e.Handled = true;
-            this.Close(PathField.Text);
+            if (PathField.Text == "")
+                this.Close();
+            else
+                this.Close(PathField.Text);
         }
 
         public void AbortCommand(object sender, RoutedEventArgs e)
