@@ -51,7 +51,7 @@ jobs:
     
     env:
       Solution_Name: RegressionChecker\RegressionChecker.sln                      
-      Test_Project_Path: RegressionChecker\UnitTests
+      Test_Project_Path: RegressionChecker\UnitTests\UnitTests.csproj
 
     steps:
     - name: Checkout
