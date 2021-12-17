@@ -50,7 +50,7 @@ jobs:
     runs-on: windows-latest 
     
     env:
-      Solution_Name: RegressionChecker.sln                      
+      Solution_Name: RegressionChecker\RegressionChecker.sln                      
       Test_Project_Path: RegressionChecker\UnitTests
 
     steps:
