@@ -50,8 +50,8 @@ jobs:
     runs-on: windows-latest 
     
     env:
-      Solution_Name: RegressionChecker\RegressionChecker\RegressionChecker.sln                      
-      Test_Project_Path: ..\UnitTests\UnitTests.csproj
+      Solution_Name: RegressionChecker\RegressionChecker.sln                      
+      Test_Project_Path: ..\..\UnitTests\UnitTests.csproj
 
     steps:
     - name: Checkout
