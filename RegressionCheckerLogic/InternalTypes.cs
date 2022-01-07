@@ -180,7 +180,7 @@ namespace RegressionCheckerLogic
     public struct RegressiveMethodEntry : IEquatable<RegressiveMethodEntry>
     {
         public string MethodName { get; set; }
-        public int FrameNumber { get; set; }
+        public string FrameNumber { get; set; }
         public double Runtime { get; set; }
 
         public bool Equals(RegressiveMethodEntry other)
@@ -216,7 +216,7 @@ namespace RegressionCheckerLogic
         public override string ToString()
         {
             string str = "MethodName: " + MethodName +
-                " | FrameNumber: " + Convert.ToString(FrameNumber) +
+                " | FrameNumber: " + FrameNumber +
                 " | Runtime:" + Runtime.ToString();
 
             return str;

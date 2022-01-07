@@ -11,7 +11,7 @@ namespace RegressionChecker
 {
     public partial class AddFilePathDialog : Window, INotifyPropertyChanged, IAddFilePathDialog
     {
-        new public event PropertyChangedEventHandler PropertyChanged;
+        new public event PropertyChangedEventHandler? PropertyChanged;
 
         TextBox PathField { get; set; }
 
@@ -37,7 +37,7 @@ namespace RegressionChecker
             this.Close();
         }
 
-        protected bool RaiseAndSetIfChanged<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        protected bool RaiseAndSetIfChanged<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
         {
             if (!EqualityComparer<T>.Default.Equals(field, value))
             {
@@ -48,7 +48,7 @@ namespace RegressionChecker
             return false;
         }
 
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        protected void RaisePropertyChanged([CallerMemberName] string? propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

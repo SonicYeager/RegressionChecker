@@ -2,7 +2,8 @@
   "profiles": {
     "regressioneval": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\!REPOS\\RegressionChecker\\SysTests\\TestResults\\ -r D:\\!REPOS\\RegressionChecker\\SysTests\\ForTests\\video_pro_x_u_x64_FT.csv -l D:\\!REPOS\\RegressionChecker\\SysTests\\ForTests\\video_pro_x_u_x64m_FT.csv D:\\!REPOS\\RegressionChecker\\SysTests\\ForTests\\video_pro_x_u_x64m_RT.csv"
+      "commandLineArgs": "G:\\Repositories\\MyRepos\\RegressionChecker\\RegressionChecker\\bin\\Debug\\net6.0 -r G:\\Repositories\\MyRepos\\RegressionChecker\\RegressionChecker\\bin\\Debug\\net6.0\\video_pro_x_u_x64r_FT.csv -l G:\\Repositories\\MyRepos\\RegressionChecker\\RegressionChecker\\bin\\Debug\\net6.0\\video_pro_x_u_x64_FT.csv G:\\Repositories\\MyRepos\\RegressionChecker\\RegressionChecker\\bin\\Debug\\net6.0\\video_pro_x_u_x64_RT.csv",
+      "workingDirectory": "..\\RegressionChecker\\bin"
     }
   }
 }

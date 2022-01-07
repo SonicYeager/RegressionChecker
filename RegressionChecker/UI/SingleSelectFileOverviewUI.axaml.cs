@@ -52,7 +52,7 @@ namespace RegressionChecker
             onOpenFilePathSelection?.Invoke();
         }
 
-        protected bool RaiseAndSetIfChanged<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        protected bool RaiseAndSetIfChanged<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
         {
             if (!EqualityComparer<T>.Default.Equals(field, value))
             {
@@ -68,7 +68,13 @@ namespace RegressionChecker
 
         public void AddFilePath(string path)
         {
-            Paths.Add(new PathViewModel(){Path=path});
+            if (path != null)
+                Paths.Add(new PathViewModel(){Path=path});
+        }
+
+        public string GetSelection()
+        {
+            return SelectedPath.Path;
         }
     }
 }

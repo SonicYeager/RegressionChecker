@@ -9,7 +9,8 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Avalonia;
 using System.Collections.ObjectModel;
 using System.Linq;
-
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace RegressionChecker
 {
@@ -49,6 +50,9 @@ namespace RegressionChecker
         public void SetLineChartSeries(LineChartSeriesData seriesData)
         {
             var existingSeries = LineSeries.FirstOrDefault((LineSeries<double> series) => series.Name == seriesData.Name);
+            var strokecolor = new SolidColorPaint(new SKColor(50, 50, 200)) { StrokeThickness = 1 };
+            if (seriesData.Name != "Latest")
+                strokecolor = new SolidColorPaint(new SKColor(200, 50, 50)) { StrokeThickness = 1 };
             var values = new List<double>();
             foreach (var item in seriesData.Values)
                 values.Add(item);
@@ -57,9 +61,10 @@ namespace RegressionChecker
                 existingSeries = new LineSeries<double>()
                 {
                     Name = seriesData.Name,
-                    Fill = null,
-                    GeometrySize = 10,
+                    GeometryStroke = null,
+                    GeometrySize = 5,
                     Values = values,
+                    Stroke = strokecolor,
                 };
             }
             else
@@ -67,9 +72,10 @@ namespace RegressionChecker
                 LineSeries.Add(new LineSeries<double>()
                 {
                     Name = seriesData.Name,
-                    Fill = null,
-                    GeometrySize = 10,
+                    GeometryStroke = null,
+                    GeometrySize = 5,
                     Values = values,
+                    Stroke = strokecolor,
                 });
             }
         }
@@ -99,5 +105,10 @@ namespace RegressionChecker
 
         protected void RaisePropertyChanged([CallerMemberName] string? propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        public void RemoveLineChartSeries(string seriesname)
+        {
+            LineSeries.Remove(LineSeries.FirstOrDefault((LineSeries<double> series) => series.Name == seriesname));
+        }
     }
 }

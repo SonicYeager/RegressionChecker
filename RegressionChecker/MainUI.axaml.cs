@@ -15,27 +15,38 @@ namespace RegressionChecker
     {
 
         //UserControls
-        public ISingleSelectFileOverviewUI SingleSelectFileOverviewUI { get; set; }
-        public IMultiSelectFileOverviewUI MultiSelectFileOverviewUI { get; set; }
-        public ISingleSelectionOverviewAutomaticAddUI SingleSelectionOverviewAutomaticAddUI { get; set; }
-        public IChartWrapperUI ChartWrapperUI { get; set; }
+        public ISingleSelectFileOverviewUI? SingleSelectFileOverviewUI { get; set; }
+        public IMultiSelectFileOverviewUI? MultiSelectFileOverviewUI { get; set; }
+        public ISingleSelectionOverviewAutomaticAddUI? SingleSelectionOverviewAutomaticAddUI { get; set; }
+        public IChartWrapperUI? ChartWrapperUI { get; set; }
 
         public MainUI()
         {
             AvaloniaXamlLoader.Load(this);
 
-            //this.AttachDevTools();
-
-            SingleSelectFileOverviewUI = (ISingleSelectFileOverviewUI)this.FindControl<UserControl>("SingleSelectFileOverview");
-            MultiSelectFileOverviewUI = (IMultiSelectFileOverviewUI)this.FindControl<UserControl>("MultiSelectFileOverview");
-            SingleSelectionOverviewAutomaticAddUI = (ISingleSelectionOverviewAutomaticAddUI)this.FindControl<UserControl>("SingleSelectionOverviewAutomaticAdd");
-            ChartWrapperUI = (IChartWrapperUI)this.FindControl<UserControl>("ChartWrapper");
-
             Title = "RegressionChecker";
             DataContext = this;
-
             SetDark();
+
+            SingleSelectFileOverviewUI = (ISingleSelectFileOverviewUI?)WindowHelperFunctions.FindUserControl<UserControl>( this.LogicalChildren, "SingleSelectFileOverview");
+            MultiSelectFileOverviewUI = (IMultiSelectFileOverviewUI?)WindowHelperFunctions.FindUserControl<UserControl>(this.LogicalChildren, "MultiSelectFileOverview");
+            SingleSelectionOverviewAutomaticAddUI = (ISingleSelectionOverviewAutomaticAddUI?)WindowHelperFunctions.FindUserControl<UserControl>(this.LogicalChildren, "SingleSelectionOverviewAutomaticAdd");
+            ChartWrapperUI = (IChartWrapperUI?)WindowHelperFunctions.FindUserControl<UserControl>(this.LogicalChildren, "ChartWrapper");
+
+            SingleSelectFileOverviewUI.onOpenFilePathSelection += async () => 
+            {
+                Window addFilePathDialog = new AddFilePathDialog();
+                var res = await (addFilePathDialog.ShowDialog<string>(this));
+                SingleSelectFileOverviewUI?.AddFilePath(res);
+            };
+            MultiSelectFileOverviewUI.onOpenFilePathSelection += async () => 
+            {
+                Window addFilePathDialog = new AddFilePathDialog();
+                var res = await (addFilePathDialog.ShowDialog<string>(this));
+                MultiSelectFileOverviewUI?.AddFilePath(res); 
+            };
         }
+
 
         public void AddLineChartSeries(LineChartSeriesData seriesData)
         {
@@ -55,10 +66,9 @@ namespace RegressionChecker
         public void SetDark()
         {
             Background = new SolidColorBrush(new Color(120, 40, 40, 40));
-            //HighlightedBackgound = new SolidColorBrush(new Color(255, 40, 40, 40));
             Foreground = new SolidColorBrush(new Color(255, 250, 250, 250));
 
-            Application.Current.Styles.Insert(0, App.DefaultDark);
+            Application.Current?.Styles.Insert(0, App.DefaultDark);
 
             LiveCharts.Configure(
                 settings => settings
@@ -83,14 +93,13 @@ namespace RegressionChecker
                                 });
                         }));
         }
-
         public void SetLight()
         {
             Background = new SolidColorBrush(new Color(120, 238, 238, 238));
             //HighlightedBackgound = new SolidColorBrush(new Color(255, 255, 255, 255));
             Foreground = new SolidColorBrush(new Color(255, 70, 70, 70));
 
-            Application.Current.Styles.Insert(0, App.DefaultLight);
+            Application.Current?.Styles.Insert(0, App.DefaultLight);
 
             LiveCharts.Configure(
                 settings => settings
@@ -98,7 +107,6 @@ namespace RegressionChecker
                     .AddSkiaSharp()
                     .AddLightTheme());
         }
-
         public override void Show()
         {
             base.Show();

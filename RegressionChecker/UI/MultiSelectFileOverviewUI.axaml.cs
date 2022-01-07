@@ -39,10 +39,8 @@ namespace RegressionChecker
         private void SelectedPathsChangedHandler(object? sender, SelectionModelSelectionChangedEventArgs<PathViewModel> e)
         {
             List<string> selection = new();
-            foreach (var item in e.SelectedItems)
-                selection.Add(item.Path);
-            foreach (var item in e.DeselectedItems)
-                selection.Remove(item.Path);
+            foreach (var selected in SelectedPaths.SelectedItems)
+                selection.Add(selected.Path);
             onMultiFilePathSelection?.Invoke(selection);
         }
 
@@ -58,10 +56,21 @@ namespace RegressionChecker
 
         public void AddFilePath(string path)
         {
-            Paths.Add(new PathViewModel() { Path = path });
+            if(path != null)
+                Paths.Add(new PathViewModel() { Path = path });
         }
 
-        protected bool RaiseAndSetIfChanged<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        public List<string> GetSelection()
+        {
+            List<string> selection = new List<string>();
+
+            foreach (var item in SelectedPaths.SelectedItems)
+                selection.Add(item.Path);
+
+            return selection;
+        }
+
+        protected bool RaiseAndSetIfChanged<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
         {
             if (!EqualityComparer<T>.Default.Equals(field, value))
             {

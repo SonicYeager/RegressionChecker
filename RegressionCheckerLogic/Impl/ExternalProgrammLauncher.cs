@@ -18,7 +18,7 @@ namespace RegressionCheckerLogic
             using Process process = new Process() { StartInfo = processStartInfo };
             process.Start();
             process.WaitForExit();
-            //var ext = process.ExitCode;
+            var ext = process.ExitCode;
         }
     }
 }

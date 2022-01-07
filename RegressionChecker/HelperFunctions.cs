@@ -6,9 +6,9 @@ namespace RegressionChecker
 {
     public static class WindowHelperFunctions
     {
-        public static T FindUserControl<T>(IEnumerable<Avalonia.LogicalTree.ILogical> list, string name) where T : UserControl
+        public static T? FindUserControl<T>(IEnumerable<Avalonia.LogicalTree.ILogical> list, string name) where T : UserControl
         {
-            T Recursion(IEnumerable<Avalonia.LogicalTree.ILogical> list)
+            T? Recursion(IEnumerable<Avalonia.LogicalTree.ILogical> list)
             {
                 foreach (Avalonia.LogicalTree.ILogical i in list)
                 {
@@ -18,7 +18,7 @@ namespace RegressionChecker
                     }
                     else
                     {
-                        T r = Recursion(i.LogicalChildren);
+                        T? r = Recursion(i.LogicalChildren);
                         if (r != null)
                         {
                             return r;

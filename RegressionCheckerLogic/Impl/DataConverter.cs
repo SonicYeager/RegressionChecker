@@ -38,5 +38,22 @@ namespace RegressionCheckerLogic
 
             return pieChartSeriesData;
         }
+
+        public List<RegressiveMethodEntry> ConvertCSVFileToRegressiveMethodEntries(CSVFile file)
+        {
+            List<RegressiveMethodEntry> regressiveMethodEntries = new List<RegressiveMethodEntry>();
+
+            foreach (var elem in file.Elements)
+            {
+                regressiveMethodEntries.Add(new RegressiveMethodEntry()
+                {
+                    MethodName = elem[1],
+                    FrameNumber = elem[0],
+                    Runtime = ConvertToDouble(elem[2])
+                });
+            }
+
+            return regressiveMethodEntries;
+        }
     }
 }

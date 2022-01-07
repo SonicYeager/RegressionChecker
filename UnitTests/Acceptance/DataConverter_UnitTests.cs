@@ -177,5 +177,72 @@ namespace UnitTests
 
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void ConvertCSVFileToRegressiveMethodEntries_MultipleEntries_ReturnsListOfRegressiveMethodEntry()
+        {
+            //public string MethodName { get; set; }
+            //public int FrameNumber { get; set; }
+            //public double Runtime { get; set; }
+
+            DataConverter converter = new();
+            CSVFile input = new CSVFile()
+            {
+                Seperator = ';',
+                FilePath = "C:\\Parsed_FT.csv",
+                Headers = new List<string>()
+                {
+                    "Frame",
+                    "MethodName",
+                    "RunTime"
+                },
+                Elements = new List<List<string>>()
+                {
+                    new List<string>()
+                    {
+                        "00:00:00",
+                        "GetVideoFrame",
+                        "13.4780"
+                    },
+                    new List<string>()
+                    {
+                        "00:00:00",
+                        "DrawBMP",
+                        "2.5098"
+                    },
+                    new List<string>()
+                    {
+                        "00:00:01",
+                        "DrawBMP",
+                        "2.5098"
+                    }
+                },
+            };
+            List<RegressiveMethodEntry> expected = new List<RegressiveMethodEntry>()
+            {
+                 new RegressiveMethodEntry()
+                 { 
+                     MethodName = "GetVideoFrame",
+                     FrameNumber = "00:00:00",
+                     Runtime = 13.4780
+                 },
+                 new RegressiveMethodEntry()
+                 {
+                     MethodName = "DrawBMP",
+                     FrameNumber = "00:00:00",
+                     Runtime = 2.5098
+                 },
+                 new RegressiveMethodEntry()
+                 {
+                     MethodName = "DrawBMP",
+                     FrameNumber = "00:00:01",
+                     Runtime = 2.5098
+                 },
+            };
+
+            var actual = converter.ConvertCSVFileToRegressiveMethodEntries(input);
+
+            Assert.Equal(expected, actual);
+        }
     }
 }

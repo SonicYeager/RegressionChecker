@@ -59,7 +59,6 @@ namespace regressionevallogic
             IterateTill(smallestIndex, (int i) => averagedFrameTimes.Elements.Add(CreateAveragedEntry(frameTimes, averaged, i)));
             
             return averagedFrameTimes;
-
         }
 
         private List<string> SelectMaxRunTime(LatestData latestData, Predicate<List<string>> matchesGivenFrame)

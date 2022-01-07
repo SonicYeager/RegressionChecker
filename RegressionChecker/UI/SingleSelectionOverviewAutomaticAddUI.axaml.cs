@@ -43,12 +43,7 @@ namespace RegressionChecker
                 onSingleFilePathSelection?.Invoke(SelectedPath.Path);
         }
 
-        public void AddFilePath(string path)
-        {
-            Paths.Add(new PathViewModel() { Path = path });
-        }
-
-        protected bool RaiseAndSetIfChanged<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        protected bool RaiseAndSetIfChanged<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
         {
             if (!EqualityComparer<T>.Default.Equals(field, value))
             {
@@ -61,5 +56,11 @@ namespace RegressionChecker
 
         protected void RaisePropertyChanged([CallerMemberName] string? propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        public void SetRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries)
+        {
+            foreach (var entry in regressiveMethodEntries)
+                Paths.Add(new PathViewModel() { Path = entry.ToString() });
+        }
     }
 }

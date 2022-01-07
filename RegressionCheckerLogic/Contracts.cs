@@ -9,7 +9,11 @@ namespace RegressionCheckerLogic
     public delegate void OnSingleFilePathSelection(string path);
     public delegate void OnReadLineChartSeriesData(LineChartSeriesData data);
     public delegate void OnReadPieChartSeriesData(PieChartSeriesData data);
+    public delegate void OnReadRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries);
     public delegate void OnOpenAddFilePathDialog();
+    public delegate void OnRequestReferenceSelection();
+    public delegate void OnRequestDestiantion();
+    public delegate void OnRemoveChartSeries(string name);
 
     public interface IMainUI : INotifyPropertyChanged
     {
@@ -25,11 +29,13 @@ namespace RegressionCheckerLogic
 
     public interface IAddFilePathDialog
     {
+        event PropertyChangedEventHandler PropertyChanged;
     }
 
     public interface ISingleSelectFileOverviewUI
     {
         public void AddFilePath(string path);
+        public string GetSelection();
 
         public event OnSingleFilePathSelection onSingleFilePathSelection;
         public event OnOpenAddFilePathDialog onOpenFilePathSelection;
@@ -37,32 +43,34 @@ namespace RegressionCheckerLogic
 
     public interface ISingleSelectFileOverviewController
     {
-        public LineChartSeriesData GetLineChartSeriesDataFromFile(string path);
-        public PieChartSeriesData GetPieChartSeriesDataFromFile(string path);
-
         public event OnReadLineChartSeriesData onReadLineChartSeriesData;
-        public event OnReadPieChartSeriesData onReadPieChartSeriesData;
+        public event OnReadRegressiveMethods onReadRegressiveMethods;
+        public event OnRequestReferenceSelection onRequestReferenceSelection;
+        public event OnRequestDestiantion onRequestDestiantion;
+        public event OnRemoveChartSeries onRemoveChartSeries;
+
+        public void SetRefernceSelection(List<string> refSelection);
+        public void SetDestination(string dest);
+        public string GetSelection();
     }
 
     public interface ISingleSelectionOverviewAutomaticAddUI
     {
-        public void AddFilePath(string path);
+        public void SetRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries);
 
         public event OnSingleFilePathSelection onSingleFilePathSelection;
     }
 
     public interface ISingleSelectionOverviewAutomaticAddController
     {
-        public LineChartSeriesData GetLineChartSeriesDataFromFile(string path);
-        public PieChartSeriesData GetPieChartSeriesDataFromFile(string path);
-
-        public event OnReadLineChartSeriesData onReadLineChartSeriesData;
-        public event OnReadPieChartSeriesData onReadPieChartSeriesData;
+        public void SetRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries);
     }
 
     public interface IMultiSelectFileOverviewUI
     {
         public void AddFilePath(string path);
+
+        public List<string> GetSelection();
 
         public event OnMultiFilePathSelection onMultiFilePathSelection;
         public event OnOpenAddFilePathDialog onOpenFilePathSelection;
@@ -70,22 +78,30 @@ namespace RegressionCheckerLogic
 
     public interface IMultiSelectFileOverviewController
     {
-        public LineChartSeriesData GetLineChartSeriesDataFromFile(string path);
-        public PieChartSeriesData GetPieChartSeriesDataFromFile(string path);
-
         public event OnReadLineChartSeriesData onReadLineChartSeriesData;
-        public event OnReadPieChartSeriesData onReadPieChartSeriesData;
+        public event OnReadRegressiveMethods onReadRegressiveMethods;
+        public event OnRequestReferenceSelection onRequestReferenceSelection;
+        public event OnRequestDestiantion onRequestDestiantion;
+        public event OnRemoveChartSeries onRemoveChartSeries;
+
+        public void SetLatestSelection(string refSelection);
+        public void SetDestination(string dest);
+        public List<string> GetSelection();
     }
 
     public interface IChartWrapperUI
     {
         public void SetLineChartSeries(LineChartSeriesData seriesData);
         public void SetPieChartSeries(PieChartSeriesData seriesData);
+        public void RemoveLineChartSeries(string seriesname);
     }
 
     public interface IChartWrapperController
     {
-        //TODO
+        public void SetLineChartSeries(LineChartSeriesData seriesData);
+        public void SetPieChartSeries(PieChartSeriesData seriesData);
+        public void RemoveLineChartSeries(string seriesname);
+
     }
 
     public interface ICommandParser
@@ -99,6 +115,7 @@ namespace RegressionCheckerLogic
     {
         public LineChartSeriesData ConvertCSVFileToLineChartSeriesData(CSVFile file, string name);
         public PieChartSeriesData ConvertCSVFileToPieChartSeriesData(CSVFile file, string framenumber);
+        public List<RegressiveMethodEntry> ConvertCSVFileToRegressiveMethodEntries(CSVFile file);
     }
 
     public interface ICSVFileReader
