@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using System;
 using RegressionCheckerLogic;
+using System.Runtime;
 
 namespace RegressionChecker
 {
@@ -58,6 +59,7 @@ namespace RegressionChecker
 
         public static void Main(string[] args)
         {
+            GCSettings.LatencyMode = GCLatencyMode.Interactive;
             RegressionCheckerApp.Init(args, AppInit);
         }
 
