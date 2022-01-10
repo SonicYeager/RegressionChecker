@@ -10,11 +10,11 @@ namespace RegressionCheckerLogic
         public static readonly char CSV_SEPERATOR = ';';
     }
 
-    public struct PathViewModel : IEquatable<PathViewModel>
+    public struct PathModel : IEquatable<PathModel>
     {
         public string Path { get; set; }
 
-        public bool Equals(PathViewModel other)
+        public bool Equals(PathModel other)
         {
             return Path == other.Path;
         }
@@ -23,7 +23,7 @@ namespace RegressionCheckerLogic
         {
             try
             {
-                return Equals((PathViewModel)obj);
+                return Equals((PathModel)obj);
             }
             catch (Exception)
             {
@@ -43,6 +43,52 @@ namespace RegressionCheckerLogic
         public override string ToString()
         {
             string str = "FilePath: " + Path;
+
+            return str;
+        }
+    }
+
+    public struct RegressiveMethodEntryModel : IEquatable<RegressiveMethodEntryModel>
+    {
+        public string MethodName { get; set; }
+        public string FrameNumber { get; set; }
+        public string Runtime { get; set; }
+
+        public bool Equals(RegressiveMethodEntryModel other)
+        {
+            return MethodName == other.MethodName &&
+                FrameNumber == other.FrameNumber &&
+                Runtime == other.Runtime;
+        }
+
+        public override bool Equals(object obj)
+        {
+            try
+            {
+                return Equals((RegressiveMethodEntryModel)obj);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hashCode = new HashCode();
+
+            hashCode.Add(MethodName.GetHashCode());
+            hashCode.Add(FrameNumber.GetHashCode());
+            hashCode.Add(Runtime.GetHashCode());
+
+            return hashCode.ToHashCode();
+        }
+
+        public override string ToString()
+        {
+            string str = "MethodName: " + MethodName +
+                " | FrameNumber: " + FrameNumber +
+                " | Runtime:" + Runtime;
 
             return str;
         }

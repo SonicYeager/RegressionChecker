@@ -18,7 +18,11 @@
             <ListBox Items="{Binding Paths}" SelectionMode="Toggle" SelectedItem="{Binding SelectedPath}">
               <ListBox.ItemTemplate>
                 <DataTemplate>
-                  <TextBlock Text="{Binding Path}"/>
+					<StackPanel Orientation="Horizontal" Spacing="2">
+                        <TextBlock Text="{Binding MethodName}"/>
+                        <TextBlock Text="{Binding FrameNumber}"/>
+                        <TextBlock Text="{Binding Runtime}"/>
+					</StackPanel>
                 </DataTemplate>
               </ListBox.ItemTemplate>
             </ListBox>

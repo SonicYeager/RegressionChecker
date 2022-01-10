@@ -7,9 +7,10 @@ namespace RegressionCheckerLogic
     public delegate void OnAdditionalFilePath(string path);
     public delegate void OnMultiFilePathSelection(List<string> paths);
     public delegate void OnSingleFilePathSelection(string path);
+    public delegate void OnRegressiveEntrySelection(RegressiveMethodEntry entry, string path);
     public delegate void OnReadLineChartSeriesData(LineChartSeriesData data);
     public delegate void OnReadPieChartSeriesData(PieChartSeriesData data);
-    public delegate void OnReadRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries);
+    public delegate void OnReadRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries, string path);
     public delegate void OnOpenAddFilePathDialog();
     public delegate void OnRequestReferenceSelection();
     public delegate void OnRequestDestiantion();
@@ -56,14 +57,17 @@ namespace RegressionCheckerLogic
 
     public interface ISingleSelectionOverviewAutomaticAddUI
     {
-        public void SetRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries);
+        public void SetRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries, string path);
+        public void RemoveRegressiveMethods();
 
-        public event OnSingleFilePathSelection onSingleFilePathSelection;
+        public event OnRegressiveEntrySelection onRegressiveEntrySelection;
     }
 
     public interface ISingleSelectionOverviewAutomaticAddController
     {
-        public void SetRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries);
+        public event OnReadPieChartSeriesData onReadPieChartSeriesData;
+        public void SetRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries, string path);
+        public void RemoveRegressiveMethods();
     }
 
     public interface IMultiSelectFileOverviewUI

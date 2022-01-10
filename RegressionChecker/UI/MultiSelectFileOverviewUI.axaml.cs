@@ -18,13 +18,13 @@ namespace RegressionChecker
 
         new public event PropertyChangedEventHandler? PropertyChanged;
 
-        ObservableCollection<PathViewModel> paths = new ObservableCollection<PathViewModel>();
-        public ObservableCollection<PathViewModel> Paths
+        ObservableCollection<PathModel> paths = new ObservableCollection<PathModel>();
+        public ObservableCollection<PathModel> Paths
         {
             get => paths;
             set => this.RaiseAndSetIfChanged(ref paths, value);
         }
-        public SelectionModel<PathViewModel> SelectedPaths { get; set; } = new() { SingleSelect = false };
+        public SelectionModel<PathModel> SelectedPaths { get; set; } = new() { SingleSelect = false };
 
         public MultiSelectFileOverviewUI()
         {
@@ -36,7 +36,7 @@ namespace RegressionChecker
             DataContext = this;
         }
 
-        private void SelectedPathsChangedHandler(object? sender, SelectionModelSelectionChangedEventArgs<PathViewModel> e)
+        private void SelectedPathsChangedHandler(object? sender, SelectionModelSelectionChangedEventArgs<PathModel> e)
         {
             List<string> selection = new();
             foreach (var selected in SelectedPaths.SelectedItems)
@@ -57,7 +57,7 @@ namespace RegressionChecker
         public void AddFilePath(string path)
         {
             if(path != null)
-                Paths.Add(new PathViewModel() { Path = path });
+                Paths.Add(new PathModel() { Path = path });
         }
 
         public List<string> GetSelection()

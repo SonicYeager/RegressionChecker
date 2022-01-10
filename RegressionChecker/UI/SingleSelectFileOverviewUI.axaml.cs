@@ -19,14 +19,14 @@ namespace RegressionChecker
 
         new public event PropertyChangedEventHandler? PropertyChanged;
 
-        ObservableCollection<PathViewModel> paths = new ObservableCollection<PathViewModel>();
-        public ObservableCollection<PathViewModel> Paths
+        ObservableCollection<PathModel> paths = new ObservableCollection<PathModel>();
+        public ObservableCollection<PathModel> Paths
         {
             get => paths;
             set => this.RaiseAndSetIfChanged(ref paths, value);
         }
-        PathViewModel selectedPath;
-        public PathViewModel SelectedPath
+        PathModel selectedPath;
+        public PathModel SelectedPath
         {
             get => selectedPath;
             set => this.RaiseAndSetIfChanged(ref selectedPath, value);
@@ -69,7 +69,7 @@ namespace RegressionChecker
         public void AddFilePath(string path)
         {
             if (path != null)
-                Paths.Add(new PathViewModel(){Path=path});
+                Paths.Add(new PathModel(){Path=path});
         }
 
         public string GetSelection()

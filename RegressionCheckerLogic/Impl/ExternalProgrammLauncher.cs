@@ -15,6 +15,7 @@ namespace RegressionCheckerLogic
             foreach (var arg in args)
                 arguments += arg + " ";
             ProcessStartInfo processStartInfo = new(programmName, arguments);
+            processStartInfo.CreateNoWindow = true;
             using Process process = new Process() { StartInfo = processStartInfo };
             process.Start();
             process.WaitForExit();

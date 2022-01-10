@@ -26,8 +26,8 @@ namespace RegressionChecker
             get => lineSeries;
             set => this.RaiseAndSetIfChanged(ref lineSeries, value);
         }
-        ObservableCollection<LineSeries<double>> pieSeries = new ObservableCollection<LineSeries<double>>();
-        public ObservableCollection<LineSeries<double>> PieSeries
+        ObservableCollection<PieSeries<double>> pieSeries = new ObservableCollection<PieSeries<double>>();
+        public ObservableCollection<PieSeries<double>> PieSeries
         {
             get => pieSeries;
             set => this.RaiseAndSetIfChanged(ref pieSeries, value);
@@ -45,6 +45,8 @@ namespace RegressionChecker
             LineChart = this.FindControl<CartesianChart>("LineChart");
             PieChart = this.FindControl<PieChart>("PieChart");
 
+            LineChart.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X;
+            LineChart.UpdaterThrottler = TimeSpan.FromMilliseconds(50);
         }
 
         public void SetLineChartSeries(LineChartSeriesData seriesData)
@@ -61,6 +63,9 @@ namespace RegressionChecker
                 existingSeries = new LineSeries<double>()
                 {
                     Name = seriesData.Name,
+                    Fill = null,
+                    LineSmoothness = 0.0,
+                    GeometryFill = strokecolor,
                     GeometryStroke = null,
                     GeometrySize = 5,
                     Values = values,
@@ -72,9 +77,12 @@ namespace RegressionChecker
                 LineSeries.Add(new LineSeries<double>()
                 {
                     Name = seriesData.Name,
+                    Fill = null,
+                    GeometryFill = strokecolor,
                     GeometryStroke = null,
                     GeometrySize = 5,
                     Values = values,
+                    LineSmoothness = 0.0,
                     Stroke = strokecolor,
                 });
             }
@@ -82,14 +90,13 @@ namespace RegressionChecker
 
         public void SetPieChartSeries(PieChartSeriesData seriesData)
         {
-            var values = new List<LineSeries<double>>();
+            PieSeries.Clear();
             foreach (var item in seriesData.Values)
-                values.Add(new LineSeries<double>()
+                PieSeries.Add(new PieSeries<double>()
                 { 
                     Name = item.EntryName,
                     Values = new double[1] { item.EntryValue },
                 });
-            PieSeries = new ObservableCollection<LineSeries<double>>(values);
         }
 
         protected bool RaiseAndSetIfChanged<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)

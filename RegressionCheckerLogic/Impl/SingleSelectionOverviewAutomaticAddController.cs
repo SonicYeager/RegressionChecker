@@ -13,17 +13,33 @@ namespace RegressionCheckerLogic
         public ICSVFileReader CSVFileReader { get; set; }
         public IExternalProgrammLauncher ExternalProgrammLauncher { get; set; }
 
+        public event OnReadPieChartSeriesData onReadPieChartSeriesData;
+
         public SingleSelectionOverviewAutomaticAddController(IDataConverter dataConverter, ICSVFileReader csvFileReader, IExternalProgrammLauncher externalProgrammLauncher,ISingleSelectionOverviewAutomaticAddUI singleSelectionOverviewAutomaticAddUI)
         {
             DataConverter = dataConverter;
             CSVFileReader = csvFileReader;
             ExternalProgrammLauncher = externalProgrammLauncher;
             SingleSelectionOverviewAutomaticAdd = singleSelectionOverviewAutomaticAddUI;
+
+            SingleSelectionOverviewAutomaticAdd.onRegressiveEntrySelection += (RegressiveMethodEntry entry, string path) => { GetRTChartSeries(entry, path); };
         }
 
-        public void SetRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries)
+        private void GetRTChartSeries(RegressiveMethodEntry entry, string path)
         {
-            SingleSelectionOverviewAutomaticAdd.SetRegressiveMethods(regressiveMethodEntries);
+            var csvfile = CSVFileReader.ReadCSVFile(path);
+            PieChartSeriesData pieChartSeriesData = DataConverter.ConvertCSVFileToPieChartSeriesData(csvfile, entry.FrameNumber);
+            onReadPieChartSeriesData?.Invoke(pieChartSeriesData);
+        }
+
+        public void SetRegressiveMethods(List<RegressiveMethodEntry> regressiveMethodEntries, string path)
+        {
+            SingleSelectionOverviewAutomaticAdd.SetRegressiveMethods(regressiveMethodEntries, path);
+        }
+
+        public void RemoveRegressiveMethods()
+        {
+            SingleSelectionOverviewAutomaticAdd.RemoveRegressiveMethods();
         }
     }
 }

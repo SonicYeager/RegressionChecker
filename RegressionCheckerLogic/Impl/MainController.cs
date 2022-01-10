@@ -28,16 +28,26 @@ namespace RegressionCheckerLogic
             CommandParser = commandParser;
 
             SingleSelectFileOverviewController.onReadLineChartSeriesData += (LineChartSeriesData lineChartSeriesData) => { ChartWrapperController.SetLineChartSeries(lineChartSeriesData); };
-            SingleSelectFileOverviewController.onReadRegressiveMethods += (List<RegressiveMethodEntry> entries) => { SingleSelectionOverviewAutomaticAddController.SetRegressiveMethods(entries); };
+            SingleSelectFileOverviewController.onReadRegressiveMethods += (List<RegressiveMethodEntry> entries, string path) => { SingleSelectionOverviewAutomaticAddController.SetRegressiveMethods(entries, path); };
             SingleSelectFileOverviewController.onRequestDestiantion += () => { SingleSelectFileOverviewController.SetDestination(Destination); };
             SingleSelectFileOverviewController.onRequestReferenceSelection += () => { SingleSelectFileOverviewController.SetRefernceSelection(MultiSelectFileOverviewController.GetSelection()); };
-            SingleSelectFileOverviewController.onRemoveChartSeries += (string seriesname) => { ChartWrapperController.RemoveLineChartSeries(seriesname); };
+            SingleSelectFileOverviewController.onRemoveChartSeries += (string seriesname) =>
+            { 
+                ChartWrapperController.RemoveLineChartSeries(seriesname);
+                SingleSelectionOverviewAutomaticAddController.RemoveRegressiveMethods(); 
+            };
 
             MultiSelectFileOverviewController.onReadLineChartSeriesData += (LineChartSeriesData lineChartSeriesData) => { ChartWrapperController.SetLineChartSeries(lineChartSeriesData); };
-            MultiSelectFileOverviewController.onReadRegressiveMethods += (List<RegressiveMethodEntry> entries) => { SingleSelectionOverviewAutomaticAddController.SetRegressiveMethods(entries); };
+            MultiSelectFileOverviewController.onReadRegressiveMethods += (List<RegressiveMethodEntry> entries, string path) => { SingleSelectionOverviewAutomaticAddController.SetRegressiveMethods(entries, path); };
             MultiSelectFileOverviewController.onRequestDestiantion += () => { MultiSelectFileOverviewController.SetDestination(Destination); };
             MultiSelectFileOverviewController.onRequestReferenceSelection += () => { MultiSelectFileOverviewController.SetLatestSelection(SingleSelectFileOverviewController.GetSelection()); };
-            MultiSelectFileOverviewController.onRemoveChartSeries += (string seriesname) => { ChartWrapperController.RemoveLineChartSeries(seriesname); };
+            MultiSelectFileOverviewController.onRemoveChartSeries += (string seriesname) => 
+            { 
+                ChartWrapperController.RemoveLineChartSeries(seriesname);
+                SingleSelectionOverviewAutomaticAddController.RemoveRegressiveMethods();
+            };
+
+            SingleSelectionOverviewAutomaticAddController.onReadPieChartSeriesData += (PieChartSeriesData data) => { ChartWrapperController.SetPieChartSeries(data); };
         }
 
         public void Run(List<string> args)

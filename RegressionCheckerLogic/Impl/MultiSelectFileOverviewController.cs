@@ -127,7 +127,7 @@ namespace RegressionCheckerLogic
                 ExternalProgrammLauncher.LaunchPorgrammWithArgs("regressioneval.exe", argsForTheEvalutaion);
                 var rl = CSVFileReader.ReadCSVFile(Destination + "RL_0.csv");
                 var regressiveMethodEntries = DataConverter.ConvertCSVFileToRegressiveMethodEntries(rl);
-                onReadRegressiveMethods?.Invoke(regressiveMethodEntries);
+                onReadRegressiveMethods?.Invoke(regressiveMethodEntries, Path.GetFileNameWithoutExtension(LatSelection) + "_RT.csv");
             }
         }
 
