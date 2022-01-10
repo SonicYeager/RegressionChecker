@@ -271,15 +271,19 @@ namespace RegressionCheckerLogic
 
     public struct ParseCommandData : IEquatable<ParseCommandData>
     {
-        public bool NoGUI { get; set; }
         public string DestinationPath { get; set; }
         public List<string> SourceFilePaths { get; set; }
+        public List<string> ReferenceFilePaths { get; set; }
+        public string LatestFilePaths { get; set; }
+        public bool NoGUI { get; set; }
 
         public bool Equals(ParseCommandData other)
         {
-            return NoGUI == other.NoGUI &&
-                DestinationPath == other.DestinationPath &&
-                SourceFilePaths.SequenceEqual(other.SourceFilePaths);
+            return DestinationPath == other.DestinationPath &&
+                   NoGUI == other.NoGUI &&
+                   ReferenceFilePaths.SequenceEqual(other.ReferenceFilePaths) &&
+                   SourceFilePaths.SequenceEqual(other.SourceFilePaths) &&
+                   Equals(LatestFilePaths, other.LatestFilePaths);
         }
 
         public override bool Equals(object obj)
@@ -300,6 +304,9 @@ namespace RegressionCheckerLogic
 
             hashCode.Add(NoGUI.GetHashCode());
             hashCode.Add(DestinationPath.GetHashCode());
+            hashCode.Add(LatestFilePaths.GetHashCode());
+            foreach (var item in ReferenceFilePaths)
+                hashCode.Add(item.GetHashCode());
             foreach (var item in SourceFilePaths)
                 hashCode.Add(item.GetHashCode());
 
@@ -308,11 +315,12 @@ namespace RegressionCheckerLogic
 
         public override string ToString()
         {
-            string str = "NoGUI: " + NoGUI +
-                " | DestinationPath: " + DestinationPath +
-                " | SourceFilePaths:";
-            foreach (var item in SourceFilePaths)
-                str += SourceFilePaths + ", ";
+            string str = "DestinationPath: " + DestinationPath + " | LatestFilePaths: " + LatestFilePaths.ToString() + " | ReferenceFilePaths: ";
+            foreach (var item in ReferenceFilePaths)
+                str += item.ToString() + ", ";
+            str += " | SourceFilePaths: ";
+            foreach(var item in SourceFilePaths)
+                str += item.ToString() + ", ";
 
             return str;
         }
