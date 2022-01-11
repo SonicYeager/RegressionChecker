@@ -89,5 +89,10 @@ namespace RegressionCheckerLogic
         {
            return SingleSelectFileOverviewUI.GetSelection();
         }
+
+        public void AddFilePath(string path)
+        {
+            SingleSelectFileOverviewUI.AddFilePath(path);
+        }
     }
 }

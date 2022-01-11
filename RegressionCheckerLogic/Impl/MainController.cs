@@ -15,10 +15,13 @@ namespace RegressionCheckerLogic
         public IChartWrapperController ChartWrapperController { get; set; }
         public IMainUI MainUI { get; set; }
         public ICommandParser CommandParser { get; set; }
+        public IDataConverter DataConverter { get; set; }
+        public ICSVFileReader CSVFileReader { get; set; }
+        public IExternalProgrammLauncher ExternalProgrammLauncher { get; set; }
 
         private string Destination { get; set; } = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\";
 
-        public MainController(ISingleSelectFileOverviewController singleSelectFileOverviewController, IMultiSelectFileOverviewController multiSelectFileOverviewController, ISingleSelectionOverviewAutomaticAddController singleSelectionOverviewAutomaticAddController, IChartWrapperController chartWrapperController, IMainUI mainUI, ICommandParser commandParser)
+        public MainController(ISingleSelectFileOverviewController singleSelectFileOverviewController, IMultiSelectFileOverviewController multiSelectFileOverviewController, ISingleSelectionOverviewAutomaticAddController singleSelectionOverviewAutomaticAddController, IChartWrapperController chartWrapperController, IMainUI mainUI, ICommandParser commandParser, IDataConverter dataConverter, ICSVFileReader csvFileReader, IExternalProgrammLauncher externalProgrammLauncher)
         {
             SingleSelectFileOverviewController = singleSelectFileOverviewController;
             MultiSelectFileOverviewController = multiSelectFileOverviewController;
@@ -26,6 +29,9 @@ namespace RegressionCheckerLogic
             ChartWrapperController = chartWrapperController;
             MainUI = mainUI;
             CommandParser = commandParser;
+            DataConverter = dataConverter;
+            CSVFileReader = csvFileReader;
+            ExternalProgrammLauncher = externalProgrammLauncher;
 
             SingleSelectFileOverviewController.onReadLineChartSeriesData += (LineChartSeriesData lineChartSeriesData) => { ChartWrapperController.SetLineChartSeries(lineChartSeriesData); };
             SingleSelectFileOverviewController.onReadRegressiveMethods += (List<RegressiveMethodEntry> entries, string path) => { SingleSelectionOverviewAutomaticAddController.SetRegressiveMethods(entries, path); };
@@ -50,13 +56,68 @@ namespace RegressionCheckerLogic
             SingleSelectionOverviewAutomaticAddController.onReadPieChartSeriesData += (PieChartSeriesData data) => { ChartWrapperController.SetPieChartSeries(data); };
         }
 
-        public void Run(List<string> args)
+        public void Run(List<string> args, OnRequestExit onRequestExit)
         {
-            var commandData = CommandParser.ParseCommandArgs(args);
-            Destination = commandData.DestinationPath;
-            //continue with ui
-            //continue without ui
-            //run down all src files with parsing and eval?
+            if(!(args.Count <= 1))
+            {
+                var commandData = CommandParser.ParseCommandArgs(args);
+                Destination = commandData.DestinationPath;
+                if (!commandData.NoGUI)
+                {
+                    SingleSelectFileOverviewController.AddFilePath(commandData.LatestFilePaths);
+                    foreach (var path in commandData.ReferenceFilePaths)
+                        MultiSelectFileOverviewController.AddFilePath(path);
+                    MainUI.ShowWindow();
+                }
+                else
+                {
+                    MainUI.CloseWindow();
+                    if (!(commandData.SourceFilePaths.Count <= 0))
+                    {
+                        foreach (var path in commandData.SourceFilePaths)
+                        {
+                            List<string> argsForTheParser = new List<string>()
+                            {
+                                Destination,
+                                path
+                            };
+                            ExternalProgrammLauncher.LaunchPorgrammWithArgs("tracelogparser.exe", argsForTheParser);
+                        }
+                    }
+                    else
+                    {
+                        List<string> argsForTheParser = new List<string>()
+                        {
+                            Destination,
+                            commandData.LatestFilePaths,
+                        };
+                        ExternalProgrammLauncher.LaunchPorgrammWithArgs("tracelogparser.exe", argsForTheParser);
+
+                        if (commandData.ReferenceFilePaths.Count != 0)
+                        {
+                            // „regressioneval.exe  <zielort>  <flag>  <ftmarkedcsv> {rtmarkedcsv} <flag> <ftmarkedcsv> {rtmarkedcsv}“.
+                            List<string> argsForTheEvalutaion = new List<string>()
+                            {
+                                Destination,
+                                "-l",
+                                Path.GetFileNameWithoutExtension(commandData.LatestFilePaths) + "_FT.csv",
+                                Path.GetFileNameWithoutExtension(commandData.LatestFilePaths) + "_RT.csv",
+                                "-r",
+                            };
+                            foreach (var sel in commandData.ReferenceFilePaths)
+                            {
+                                argsForTheEvalutaion.Add(Path.GetFileNameWithoutExtension(sel) + "_FT.csv");
+                            }
+                            ExternalProgrammLauncher.LaunchPorgrammWithArgs("regressioneval.exe", argsForTheEvalutaion);
+                        }
+                    }
+                    onRequestExit.Invoke();
+                }
+            }
+            else 
+            {
+                MainUI.ShowWindow();
+            }
         }
     }
 }

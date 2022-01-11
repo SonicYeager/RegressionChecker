@@ -20,6 +20,8 @@ namespace RegressionChecker
         public ISingleSelectionOverviewAutomaticAddUI? SingleSelectionOverviewAutomaticAddUI { get; set; }
         public IChartWrapperUI? ChartWrapperUI { get; set; }
 
+        private int _closeRequested = -1;
+
         public MainUI()
         {
             AvaloniaXamlLoader.Load(this);
@@ -109,7 +111,22 @@ namespace RegressionChecker
         }
         public override void Show()
         {
-            base.Show();
+            while (_closeRequested == -1)
+                Thread.Sleep(25);
+
+            if (_closeRequested == 1)
+                base.Show();
+            else
+                base.Close();
+        }
+        public void CloseWindow()
+        {
+            _closeRequested = 0;
+        }
+
+        public void ShowWindow()
+        {
+            _closeRequested = 1;
         }
     }
 }

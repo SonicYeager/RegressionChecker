@@ -56,10 +56,13 @@ namespace RegressionChecker
         public static IMultiSelectFileOverviewController? MultiSelectFileOverviewController { get; set; }
         public static ISingleSelectFileOverviewController? SingleSelectFileOverviewController { get; set; }
         public static ISingleSelectionOverviewAutomaticAddController? SingleSelectionOverviewAutomaticAddController { get; set; }
+        public static List<string> Args { get; set; } = new List<string>();
+        public static Thread RunThread { get; set; }
 
         public static void Main(string[] args)
         {
             GCSettings.LatencyMode = GCLatencyMode.Interactive;
+            Args.AddRange(args);
             RegressionCheckerApp.Init(args, AppInit);
         }
 
@@ -78,7 +81,22 @@ namespace RegressionChecker
             MultiSelectFileOverviewController = new MultiSelectFileOverviewController( DataConverter, CSVFileReader, ExternalProgrammLauncher, MultiSelectFileOverviewUI);
             SingleSelectFileOverviewController = new SingleSelectFileOverviewController(DataConverter, CSVFileReader, ExternalProgrammLauncher, SingleSelectFileOverviewUI);
             SingleSelectionOverviewAutomaticAddController = new SingleSelectionOverviewAutomaticAddController(DataConverter, CSVFileReader, ExternalProgrammLauncher,SingleSelectionOverviewAutomaticAddUI);
-            MainController = new MainController(SingleSelectFileOverviewController, MultiSelectFileOverviewController, SingleSelectionOverviewAutomaticAddController, ChartWrapperController, MainUI, CommandParser);
+            MainController = new MainController(
+                SingleSelectFileOverviewController, 
+                MultiSelectFileOverviewController, 
+                SingleSelectionOverviewAutomaticAddController, 
+                ChartWrapperController,
+                MainUI, 
+                CommandParser,
+                DataConverter,
+                CSVFileReader,
+                ExternalProgrammLauncher);
+
+            RunThread = new Thread(() => {
+                MainController.Run(Args, () => { Environment.Exit(0); });
+            });
+            RunThread.IsBackground = true;
+            RunThread.Start();
 
             return (MainUI)MainUI;
         }

@@ -145,5 +145,10 @@ namespace RegressionCheckerLogic
         {
             Destination = dest;
         }
+
+        public void AddFilePath(string path)
+        {
+            MultiSelectFileOverviewUI.AddFilePath(path);
+        }
     }
 }

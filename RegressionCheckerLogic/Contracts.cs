@@ -14,6 +14,7 @@ namespace RegressionCheckerLogic
     public delegate void OnOpenAddFilePathDialog();
     public delegate void OnRequestReferenceSelection();
     public delegate void OnRequestDestiantion();
+    public delegate void OnRequestExit();
     public delegate void OnRemoveChartSeries(string name);
 
     public interface IMainUI : INotifyPropertyChanged
@@ -21,11 +22,13 @@ namespace RegressionCheckerLogic
         public void AddLineChartSeries(LineChartSeriesData seriesData);
         public void AddPieChartSeries(PieChartSeriesData seriesData);
         public void SetRegressiveMethods(List<RegressiveMethodEntry> regressiveMethods);
+        public void CloseWindow();
+        public void ShowWindow();
     }
 
     public interface IMainController
     {
-        public void Run(List<string> args);
+        public void Run(List<string> args, OnRequestExit onRequestExit);
     }
 
     public interface IAddFilePathDialog
@@ -53,6 +56,7 @@ namespace RegressionCheckerLogic
         public void SetRefernceSelection(List<string> refSelection);
         public void SetDestination(string dest);
         public string GetSelection();
+        public void AddFilePath(string path);
     }
 
     public interface ISingleSelectionOverviewAutomaticAddUI
@@ -91,6 +95,7 @@ namespace RegressionCheckerLogic
         public void SetLatestSelection(string refSelection);
         public void SetDestination(string dest);
         public List<string> GetSelection();
+        public void AddFilePath(string path);
     }
 
     public interface IChartWrapperUI

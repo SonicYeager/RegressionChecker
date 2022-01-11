@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RegressionChecker": {
+      "commandName": "Project",
+      "commandLineArgs": "RegressionChecker.exe G:\\Repositories\\MyRepos\\RegressionChecker\\RegressionChecker\\bin\\Debug\\net6.0 -r G:\\Repositories\\MyRepos\\RegressionChecker\\RegressionChecker\\bin\\Debug\\net6.0\\video_pro_x_u_x64r.log G:\\Repositories\\MyRepos\\RegressionChecker\\RegressionChecker\\bin\\Debug\\net6.0\\video_pro_x_u_x64r.log G:\\Repositories\\MyRepos\\RegressionChecker\\RegressionChecker\\bin\\Debug\\net6.0\\video_pro_x_u_x64r.log -l G:\\Repositories\\MyRepos\\RegressionChecker\\RegressionChecker\\bin\\Debug\\net6.0\\video_pro_x_u_x64.log"
+    }
+  }
+}
