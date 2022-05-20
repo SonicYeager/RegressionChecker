@@ -13,12 +13,12 @@
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.11" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.11" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.11" />
-    <PackageReference Include="LiveChartsCore" Version="2.0.0-beta.90" />
-    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-beta.90" />
-    <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-beta.90" />
+    <PackageReference Include="Avalonia" Version="0.10.14" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.14" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.14" />
+    <PackageReference Include="LiveChartsCore" Version="2.0.0-beta.230" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-beta.230" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-beta.230" />
    </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RegressionCheckerLogic\RegressionCheckerLogic.csproj" />
